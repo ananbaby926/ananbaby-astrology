@@ -350,6 +350,12 @@ const starSignal = {
   正印: ['帶著具體難題向專業人士請教', '等所有人同意才開始', '約定討論後當週要完成的一項行動']
 };
 
+const relationshipSignals = {
+  正官: ['和對方把承諾與相處時間約清楚', '把自己對承諾的標準直接套在對方身上', '先問對方能做到哪些，再一起訂下下次確認的時間'],
+  正財: ['一起盤點共同支出與平日分工', '默默多付或多做，期待對方自己察覺', '明確說出各自願意負擔的金額和家務'],
+  食神: ['安排兩個人都期待的相處時間', '為了維持氣氛而跳過有歧見的事', '先談妥一件反覆卡住的小事，再安排共同活動']
+};
+
 const domains = [
   ['事業','正官 七殺 傷官 食神',[1,3], '用一件可驗收的成果談職責'],
   ['財富','正財 偏財',[1,2], '把已收款、應收款及固定支出分開記'],
@@ -415,7 +421,7 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
     const friction = ties.reduce((sum, hit) => sum + (pressure[hit.kind] || 0), 0);
     const benefit = ties.reduce((sum, hit) => sum + (hit.transforms ? model.preference[hit.target] * 1.7 : 0), 0);
     const score = roundScore(base + (stars[star] - 1.6) * 4 + benefit - friction * 1.35);
-    const [opportunity, mistake, correction] = starSignal[star];
+    const [opportunity, mistake, correction] = (label === '感情' ? relationshipSignals : starSignal)[star];
     const mainTie = [...ties].sort((a, b) => (pressure[b.kind] || 0) - (pressure[a.kind] || 0))[0];
     const context = mainTie ? describe(mainTie) : fit >= 0 ? '運歲五行整體承接喜用' : '運歲五行加重原局偏向';
     const warning = friction >= 4 ? '先處理' + context + '牽動的分工或承諾。' : '';
@@ -437,7 +443,8 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
       ((model.gods[star] || 0) * .55).toFixed(2) + ' 加到 ' + stars[star].toFixed(2) +
       '，大運干／支本氣為' + (luck ? god(model.day, luck[0]) + '／' + god(model.day, branchStems(luck[1])[0]) : '未起運') +
       '，流年干／支本氣為' + god(model.day, year[0]) + '／' + god(model.day, branchStems(year[1])[0]) +
-      '。' + context + (patternStress.text ? '。' + patternStress.text : '');
+      '。' + context + '，運歲五行與原局喜用合計 ' + fit.toFixed(2) +
+      (patternStress.text ? '。' + patternStress.text : '');
     return {label, star, score, advice, basis, opportunity, mistake, correction, friction};
   });
   const find = label => scores.find(score => score.label === label);
