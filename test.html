@@ -11,7 +11,16 @@ summary{cursor:pointer;font-weight:650}
 .trend svg{width:100%;min-width:450px}
 @media(max-width:480px){main{padding:12px}section{padding:14px}.pillar small{font-size:.67em}}
 @media print{header,.features,footer,form,main>section:last-of-type,#chart button{display:none}main,section{padding:0;border:0}#chart article{break-inside:avoid}.trend svg{min-width:0}}
-</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>四柱、大運、流年與流月試算</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第九版八字測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・星曜｜開發中</small></div><div class="feature"><b>西洋占星</b><small>星盤・相位｜開發中</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算八字（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><div id="chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script>
+.coord{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media print{
+  body[data-print-report="chart"] #pair,body[data-print-report="pair-chart"] #entry,
+  main>section .birth-coords, #entry>h2,#entry>p,#pair>h2,#pair>p,#pair-chart button{display:none}
+}
+</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>八字、紫微斗數、西洋占星與雙人合盤</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第十版命理測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・大限與流年</small></div><div class="feature"><b>西洋占星</b><small>本命星盤・上升與相位</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算三大命理（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><details class="birth-coords"><summary>西洋占星出生地座標</summary><p>預填台北市座標。若出生地不同，請輸入出生地座標。兩人出生時間均以 UTC+8 填寫。</p><div class="coord"><label>出生地緯度<input id="person-a-latitude" type="number" step="any" min="-65.99" max="65.99" value="25.033" required></label><label>出生地經度<input id="person-a-longitude" type="number" step="any" min="-180" max="180" value="121.5654" required></label></div></details><div id="chart" role="status"></div></section><section id="pair"><h2>雙人合盤</h2><p>甲方沿用上方資料。乙方資料僅用於這次試算。</p>
+<form id="pair-form"><label>乙方出生日期<input name="birth_date" type="date" required></label>
+<label>乙方出生時間<input name="birth_time" type="time" step="1" required></label>
+<label>乙方排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label>
+<div class="coord"><label>出生地緯度<input id="person-b-latitude" type="number" step="any" min="-65.99" max="65.99" value="25.033" required></label><label>出生地經度<input id="person-b-longitude" type="number" step="any" min="-180" max="180" value="121.5654" required></label></div><button type="submit">計算雙人合盤</button></form><div id="pair-chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script src="https://cdn.jsdelivr.net/npm/iztro@2.6.5/dist/iztro.min.js"></script><script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script><script>
 const stems='甲乙丙丁戊己庚辛壬癸', branches='子丑寅卯辰巳午未申酉戌亥';
 const groups=['甲乙寅卯','丙丁巳午','戊己辰戌丑未','庚辛申酉','壬癸亥子'], classes=['wood','fire','earth','metal','water'], names=['木','火','土','金','水'], colors=['#43865B','#CF4545','#795039','#C2A56D','#3265B5'];
 const hidden=['癸','己癸辛','甲丙戊','乙','戊乙癸','丙戊庚','丁己','己丁乙','庚壬戊','辛','戊辛丁','壬甲'];
@@ -654,19 +663,7 @@ function renderReport(out, model, now) {
   note(out, '使用台灣標準時間 UTC+8。晚子時日柱採當日，未校正歷史夏令時間、真太陽時。格局、合化與調候依本站規則示範。');
   const print = node('button', '列印／儲存 PDF');
   print.type = 'button';
-  print.onclick = () => {
-    const sections = [...out.querySelectorAll('details')];
-    const collapsed = sections.filter(section => !section.open);
-    for (const section of sections) {
-      section.open = true;
-      section.dispatchEvent(new Event('render-months'));
-    }
-    try {
-      window.print();
-    } finally {
-      for (const section of collapsed) section.open = false;
-    }
-  };
+  print.onclick = () => printReport(out);
   out.append(print);
 }
 
@@ -683,11 +680,276 @@ document.getElementById('calculate').onclick = () => {
     const [hour, minute, second = 0] = data.birth_time.split(':').map(Number);
     if (year < 1902 || year > 2099) throw Error('測試範圍為 1902 至 2099 年');
     const birth = Solar.fromYmdHms(year, month, day, hour, minute, second);
-    renderReport(out, chartModel(birth, data.gender), taipeiNow());
+    const now = taipeiNow();
+    const natal = chartModel(birth, data.gender);
+    renderReport(out, natal, now);
+    try {
+      const profile = completeProfile(data, locationFields('person-a'), now, natal);
+      renderZiwei(out, profile.ziwei);
+      renderWestern(out, profile.western);
+      renderCombined(out, profile);
+    } catch (error) {
+      note(out, '紫微、西洋或綜合報告未產生：' + error.message);
+    }
   } catch (error) {
     out.replaceChildren(node('p', '排盤失敗：' + error.message));
   }
 };
+// 三系統核心開始
+const zodiac = ['牡羊','金牛','雙子','巨蟹','獅子','處女','天秤','天蠍','射手','摩羯','水瓶','雙魚'];
+const westernBodies = {
+  Sun:'太陽', Moon:'月亮', Mercury:'水星', Venus:'金星', Mars:'火星', Jupiter:'木星',
+  Saturn:'土星', Uranus:'天王星', Neptune:'海王星', Pluto:'冥王星'
+};
+const angles = [[0,'合相',7],[60,'六合',4],[90,'刑相',6],[120,'拱相',6],[180,'對分',7]];
+const normalize = angle => ((angle % 360) + 360) % 360;
+const radians = degrees => degrees * Math.PI / 180;
+const signNumber = angle => Math.floor(normalize(angle) / 30);
+
+function westernChart(birth, latitude, longitude, astronomy = globalThis.Astronomy) {
+  if (!astronomy) throw Error('西洋占星星曆載入失敗，請重新整理');
+  if (!Number.isFinite(latitude) || Math.abs(latitude) >= 66 ||
+      !Number.isFinite(longitude) || Math.abs(longitude) > 180) throw Error('請輸入有效經度及介於南北緯 66 度內的緯度');
+  const instant = new Date(keyOf(birth).replace(' ', 'T') + '+08:00');
+  const sidereal = radians(astronomy.SiderealTime(instant) * 15 + longitude);
+  const tilt = radians(astronomy.e_tilt(instant).tobl);
+  const ascendant = normalize(180 + Math.atan2(
+    -Math.cos(sidereal), Math.sin(sidereal) * Math.cos(tilt) + Math.tan(radians(latitude)) * Math.sin(tilt)
+  ) * 180 / Math.PI);
+  const positions = Object.keys(westernBodies).map(body => {
+    const longitude = body === 'Sun' ? astronomy.SunPosition(instant).elon :
+      body === 'Moon' ? astronomy.EclipticGeoMoon(instant).lon :
+        astronomy.Ecliptic(astronomy.GeoVector(astronomy.Body[body], instant, true)).elon;
+    return {body, longitude, sign:signNumber(longitude), house:((signNumber(longitude) - signNumber(ascendant) + 12) % 12) + 1};
+  });
+  return {instant, ascendant, positions, aspects:westernAspects(positions)};
+}
+
+function westernAspects(first, second) {
+  const aspects = [];
+  const other = second || first;
+  first.forEach((left, index) => {
+    for (const right of other.slice(second ? 0 : index + 1)) {
+      const delta = normalize(left.longitude - right.longitude);
+      const separation = Math.min(delta, 360 - delta);
+      const aspect = angles.find(([angle, , orb]) => Math.abs(separation - angle) <= orb);
+      if (aspect) aspects.push({left:left.body, right:right.body, name:aspect[1], orb:Math.abs(separation - aspect[0]),
+        conflict:aspect[0] === 90 || aspect[0] === 180});
+    }
+  });
+  return aspects.sort((a,b) => a.orb - b.orb);
+}
+
+function ziweiChart(birth, gender, reference, library = globalThis.iztro) {
+  if (!library) throw Error('紫微斗數排盤套件載入失敗，請重新整理');
+  const index = Math.floor((birth.getHour() + 1) / 2);
+  const chart = library.astro.bySolar(birth.toYmd(), index, gender === 'male' ? '男' : '女', true, 'zh-TW');
+  const horoscope = chart.horoscope(reference.toYmd());
+  return {chart, horoscope};
+}
+
+const starThemes = {
+  紫微:'決策權與資源分工', 天機:'變動規劃與資訊核對', 太陽:'對外承諾與曝光', 武曲:'收支紀律與執行',
+  天同:'生活節奏與舒適界線', 廉貞:'利益界線與責任', 天府:'資源保存與管理', 太陰:'安全感與長期儲備',
+  貪狼:'人脈交換與多線發展', 巨門:'說明成本與溝通歧見', 天相:'協調分工與對等回饋', 天梁:'專業支援與照顧責任',
+  七殺:'授權範圍與高壓決策', 破軍:'重整流程與變更成本'
+};
+
+function ziweiTopic(ziwei, name) {
+  const {chart, horoscope} = ziwei;
+  const natal = chart.palaces.find(palace => palace.name === name);
+  const annualIndex = horoscope.yearly.palaceNames.indexOf(name);
+  const decadalIndex = horoscope.decadal.palaceNames.indexOf(name);
+  const annual = chart.palaces[annualIndex];
+  const decadal = chart.palaces[decadalIndex];
+  const opposite = chart.palaces[(natal.index + 6) % 12];
+  const stars = natal.majorStars.length ? natal.majorStars : opposite.majorStars;
+  const transformations = ['祿','權','科','忌'];
+  const annualStars = [...annual.majorStars, ...annual.minorStars].map(star => star.name);
+  const applied = horoscope.yearly.mutagen.flatMap((star, index) =>
+    annualStars.includes(star) ? [star + '化' + transformations[index]] : []);
+  const basis = '本命' + name + '在' + natal.earthlyBranch + '，' +
+    (natal.majorStars.length ? '主星 ' : '對宮參照 ') + (stars.map(star => star.name).join('、') || '無') +
+    '。大限' + name + '落' + (decadal?.earthlyBranch || '未定位') + '，流年' + name + '落' + annual.earthlyBranch +
+    (applied.length ? '，同宮流年四化 ' + applied.join('、') : '');
+  return {basis, topic:starThemes[stars[0]?.name] || '先確認角色與承諾',
+    concern:applied.some(star => star.endsWith('忌')), natal};
+}
+
+const houseThemes = ['表達立場','費用與資源','溝通節奏','居家分工','作品與約會','工作與生活流程',
+  '一對一約定','共同資源','學習與拓展','職責與能見度','團隊協作','休息與個人界線'];
+const threeTopics = [
+  ['事業','官祿','Saturn','先把目標、權限及驗收方式寫下來'],
+  ['財富','財帛','Venus','把固定收入、共同支出及可以承受的損失分開算'],
+  ['感情','夫妻','Moon','把相處時間、家庭界線與共同預算談成可以執行的約定']
+];
+
+function combinedTopics(bazi, ziwei, western) {
+  return threeTopics.map(([label, palaceName, body, action]) => {
+    const eastern = bazi.scores.find(item => item.label === label);
+    const purple = ziweiTopic(ziwei, palaceName);
+    const position = western.positions.find(item => item.body === body);
+    const aspect = western.aspects.find(item =>
+      (item.left === body || item.right === body) && item.conflict);
+    const westernBasis = westernBodies[body] + zodiac[position.sign] + '，第 ' + position.house + ' 宮，對應' +
+      houseThemes[position.house - 1] + (aspect ? '，另見' + aspectLabel(aspect) : '');
+    const caution = eastern.friction > 0 || purple.concern || Boolean(aspect);
+    return {label, bazi:eastern, purple, westernBasis, action,
+      conclusion:(caution ? '先處理容易起摩擦的環節。' : '可以先挑一件具體的事推進。') +
+        '八字優先看' + eastern.star + '牽動的行動，紫微留意' + purple.topic +
+        '，西洋盤聚焦' + houseThemes[position.house - 1] + '。' + action + '。'};
+  });
+}
+
+function aspectLabel(aspect) {
+  return westernBodies[aspect.left] + '與' + westernBodies[aspect.right] +
+    aspect.name + '（容許度 ' + aspect.orb.toFixed(2) + '°）';
+}
+
+function comparePeople(first, second) {
+  const left = first.bazi;
+  const right = second.bazi;
+  const shared = relations([...left.pillars, ...right.pillars]).filter(hit =>
+    hit.slots.some(slot => slot < 4) && hit.slots.some(slot => slot >= 4));
+  const relationships = shared.filter(hit => hit.slots.includes(2) || hit.slots.includes(6));
+  const named = hit => hit.symbols + hit.kind + '（' + hit.slots.map(index =>
+    (index < 4 ? '甲方' : '乙方') + labels[index % 4]).join('、') + '）';
+  const dayRelations = relationships.map(named);
+  const direction = [
+    left.preference[el(right.day)] > 0, right.preference[el(left.day)] > 0
+  ];
+  const aPalace = ziweiTopic(first.ziwei, '夫妻');
+  const bPalace = ziweiTopic(second.ziwei, '夫妻');
+  const personalBodies = point => ['Sun','Moon','Mercury','Venus','Mars'].includes(point.body);
+  const aspects = westernAspects(first.western.positions.filter(personalBodies), second.western.positions.filter(personalBodies));
+  const friction = relationships.some(hit => pressure[hit.kind]) || aspects.some(aspect => aspect.conflict && aspect.orb < 3);
+  return {dayRelations, direction, aPalace, bPalace, aspects,
+    advice:friction ? '先協調衝突時的回覆時間、花費上限與家人介入界線。各選一個真實情境試行，再看對方是否履約。' :
+      '可以先做一件需要共同分工的事，把誰決定、誰執行與何時檢查約好，再觀察默契能否落實。'};
+}
+// 三系統核心結束
+function locationFields(prefix) {
+  const latitude = document.getElementById(prefix + '-latitude');
+  const longitude = document.getElementById(prefix + '-longitude');
+  if (!latitude.reportValidity() || !longitude.reportValidity()) throw Error('請確認出生地經緯度');
+  return [Number(latitude.value), Number(longitude.value)];
+}
+
+function completeProfile(data, coords, reference, natal) {
+  const year = Number(data.birth_date.slice(0, 4));
+  if (year < 1902 || year > 2099) throw Error('排盤範圍為 1902 至 2099 年');
+  const numbers = (data.birth_date + ' ' + data.birth_time).match(/\d+/g).map(Number);
+  const birth = Solar.fromYmdHms(...(numbers.length === 5 ? [...numbers, 0] : numbers));
+  const bazi = natal || chartModel(birth, data.gender);
+  const at = keyOf(reference) < keyOf(birth) ? birth : reference;
+  return {bazi, reading:reading(bazi, at), ziwei:ziweiChart(birth, data.gender, at),
+    western:westernChart(birth, ...coords)};
+}
+
+function renderZiwei(out, ziwei) {
+  const {chart, horoscope} = ziwei;
+  heading(out, '紫微斗數 · 十二宮');
+  note(out, '命宮 ' + chart.earthlyBranchOfSoulPalace + '、身宮 ' + chart.earthlyBranchOfBodyPalace + '、' +
+    chart.fiveElementsClass + '。目前大限 ' + horoscope.decadal.heavenlyStem + horoscope.decadal.earthlyBranch +
+    '，流年 ' + horoscope.yearly.heavenlyStem + horoscope.yearly.earthlyBranch + '。');
+  const grid = node('div', '', 'luck-list');
+  for (const palace of chart.palaces) {
+    const card = node('div', '', 'pillar' + (palace.index === horoscope.decadal.index ? ' current-year' : ''));
+    const stars = [...palace.majorStars, ...palace.minorStars, ...palace.adjectiveStars];
+    card.append(node('b', palace.name + ' · ' + palace.heavenlyStem + palace.earthlyBranch),
+      node('p', stars.map(star => star.name + (star.brightness || '') + (star.mutagen ? '化' + star.mutagen : '')).join('、') || '無星曜'),
+      node('small', palace.decadal.range.join('–') + ' 歲大限'));
+    grid.append(card);
+  }
+  out.append(grid);
+  for (const name of ['命宮','官祿','財帛','夫妻','田宅','子女','福德','僕役']) {
+    const result = ziweiTopic(ziwei, name);
+    article(out, name.endsWith('宮') ? name : name + '宮', '這段時間先核對' + result.topic +
+      (result.concern ? '，涉及承諾時要留下可回頭核對的紀錄。' : '，把自己能掌握的部分先談清楚。'), result.basis);
+  }
+  note(out, '使用 iztro 繁中排盤，閏月前十五日歸同月、十六日起歸下月；紫微時辰與流年大限依套件口徑。');
+}
+
+function formatPlacement(longitude) {
+  return zodiac[signNumber(longitude)] + '座 ' + (normalize(longitude) % 30).toFixed(1) + '°';
+}
+
+function renderWestern(out, western) {
+  heading(out, '西洋占星 · 本命盤');
+  const grid = node('div', '', 'luck-list');
+  grid.append(node('div', '上升 ' + formatPlacement(western.ascendant), 'pillar day'));
+  for (const point of western.positions) grid.append(node('div',
+    westernBodies[point.body] + ' ' + formatPlacement(point.longitude) + ' · 第 ' + point.house + ' 宮', 'pillar'));
+  out.append(grid);
+  const list = node('ul', '');
+  for (const aspect of western.aspects) list.append(node('li', aspectLabel(aspect)));
+  out.append(western.aspects.length ? list : node('p', '在指定容許度內未檢出主要相位。'));
+  note(out, '使用 Astronomy Engine 地心熱帶黃道與整宮制。上升點依出生地經緯度計算，出生時間採 UTC+8。');
+}
+
+function renderCombined(out, profile) {
+  heading(out, '三大命理綜合報告');
+  for (const item of combinedTopics(profile.reading, profile.ziwei, profile.western)) {
+    const box = node('article', '');
+    box.append(node('h4', item.label), node('p', item.conclusion),
+      node('p', '八字｜' + item.bazi.advice + ' ' + item.bazi.basis),
+      node('p', '紫微｜' + item.purple.basis), node('p', '西洋｜' + item.westernBasis));
+    out.append(box);
+  }
+}
+
+function renderPair(out, first, second) {
+  const result = comparePeople(first, second);
+  heading(out, '雙人合盤');
+  article(out, '八字 · 夫妻宮與喜用', (result.dayRelations.join('、') || '夫妻宮未檢出本站兩盤交互組合') + '。',
+    '甲方 ' + first.bazi.day + '日主看乙方 ' + second.bazi.day + '，' +
+    (result.direction[0] ? '取用有助力' : '助力有限') + '。乙方看甲方，' +
+    (result.direction[1] ? '取用有助力' : '助力有限') + '。合盤關係以交互位置指出，合化依各自原局判讀。');
+  article(out, '紫微 · 伴侶期待', '甲方先談' + result.aPalace.topic + '，乙方先談' + result.bPalace.topic + '。',
+    '甲方 ' + result.aPalace.basis + '。乙方 ' + result.bPalace.basis);
+  article(out, '西洋 · 雙盤行星相位',
+    result.aspects.slice(0, 8).map(aspect => '甲方' + aspectLabel(aspect).replace('與', '與乙方')).join('、') ||
+      '兩人的個人行星在指定容許度內沒有主要交互相位。',
+    '比較雙方的太陽、月亮、水星、金星及火星。');
+  article(out, '相處建議', result.advice);
+  const print = node('button', '列印／儲存雙人 PDF');
+  print.type = 'button';
+  print.onclick = () => printReport(out);
+  out.append(print);
+}
+
+function printReport(out) {
+  const sections = [...out.querySelectorAll('details')];
+  const collapsed = sections.filter(section => !section.open);
+  for (const section of sections) {
+    section.open = true;
+    section.dispatchEvent(new Event('render-months'));
+  }
+  document.body.dataset.printReport = out.id;
+  try {
+    window.print();
+  } finally {
+    delete document.body.dataset.printReport;
+    for (const section of collapsed) section.open = false;
+  }
+}
+
+document.getElementById('pair-form').addEventListener('submit', event => {
+  event.preventDefault();
+  const firstForm = document.getElementById('profile');
+  const out = document.getElementById('pair-chart');
+  if (!firstForm.reportValidity()) return;
+  try {
+    out.replaceChildren();
+    const firstData = Object.fromEntries(new FormData(firstForm));
+    if (firstData.timezone !== 'Asia/Taipei') throw Error('目前試算僅支援 Asia/Taipei');
+    const now = taipeiNow();
+    renderPair(out, completeProfile(firstData, locationFields('person-a'), now),
+      completeProfile(Object.fromEntries(new FormData(event.target)), locationFields('person-b'), now));
+  } catch (error) {
+    out.replaceChildren(node('p', '合盤失敗：' + error.message));
+  }
+});
 </script><script type="module">
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const db=createClient('https://zqnjytqhwzjybjhvrxvo.supabase.co','sb_publishable_yZs9f2JUumaOE5TfCFsQrw_U4vcuEzu',{auth:{persistSession:false}});const $=id=>document.getElementById(id);const msg=(id,s)=>$(id).textContent=s;
