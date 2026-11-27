@@ -95,32 +95,56 @@ const seasonalClimate = [
   [3, 2], [2, 3], [1, 1], [0, 2], [-1, 3], [-3, -2]
 ];
 
-// 春月候選次序節錄自《窮通寶鑑》各日干條目，逐月核對。
+// 《窮通寶鑑》十干各季條目的基本取用，依節月從寅到丑排列。
 // https://zh.wikisource.org/wiki/窮通寶鑑
-// 寅、卯、辰依節氣分界。其餘九月沿用寒暖燥濕規則。
-const springCandidates = {
-  甲: ['丙癸', '庚', '庚壬'],
-  乙: ['丙癸', '丙癸', '癸丙'],
-  丙: ['壬庚', '壬', '壬甲'],
-  丁: ['庚', '庚甲', '甲庚'],
-  戊: ['丙甲癸', '丙甲癸', '甲丙癸'],
-  己: ['丙', '甲癸', '丙癸甲'],
-  庚: ['丙甲', '丁甲', '甲丁'],
-  辛: ['己壬', '壬甲', '壬甲'],
-  壬: ['庚丙戊', '戊辛', '甲庚'],
-  癸: ['辛丙', '庚辛', '丙']
+// 表中保留候選順序；同一季同文的月份可共享候選，分節與條件另列。
+const seasonalOrder = '寅卯辰巳午未申酉戌亥子丑';
+const seasonalCandidatesByDay = {
+  甲: ['丙癸','庚','庚壬', '癸丁','癸丁庚','丁庚', '丁庚','丁丙庚','丁癸', '庚丁丙','丁庚丙','庚丁'],
+  乙: ['丙癸','丙癸','癸丙', '癸辛','癸','癸', '己丙','癸','癸辛', '丙戊','丙','丙'],
+  丙: ['壬庚','壬','壬甲', '壬庚','壬庚','壬庚', '壬','壬','甲壬', '甲戊庚','壬戊','壬甲'],
+  丁: ['庚','庚甲','甲庚', '甲庚','壬','甲壬', '甲庚','甲庚','甲庚', '甲庚','甲庚','甲庚'],
+  戊: ['丙甲癸','丙甲癸','甲丙癸', '甲丙癸','壬甲','癸丙甲', '丙癸甲','丙癸','甲癸', '甲丙','丙甲','丙甲'],
+  己: ['丙','甲癸','丙癸甲', '癸丙','癸丙','癸丙', '癸丙','癸丙','癸丙', '丙甲','丙甲','丙甲'],
+  庚: ['丙甲','丁甲','甲丁', '壬戊丙','壬癸','丁甲', '丁甲','丁甲丙','甲壬', '丁甲丙','丁甲丙','丙丁甲'],
+  辛: ['己壬','壬甲','壬甲', '壬','壬己','壬庚', '壬','壬','壬甲', '壬丙','丙壬','丙壬'],
+  壬: ['庚丙戊','戊辛','甲庚', '壬辛庚','癸庚','辛甲癸', '戊丁','甲庚','甲丙', '戊庚','戊丙','丙'],
+  癸: ['辛丙','庚辛','丙', '辛庚','庚辛壬','庚辛', '丁甲','辛丙','辛甲', '庚辛','丙辛','丙']
 };
 
-function springAdvice(pillars, weights, at) {
+function seasonalAdvice(pillars, weights, at) {
   const day = pillars[2][0];
-  const month = '寅卯辰'.indexOf(pillars[1][1]);
-  if (month < 0) return [];
-  let candidates = springCandidates[day][month];
-  if (day === '癸' && month === 2 && at) {
-    const grainRain = at.getLunar().getJieQiTable()['谷雨'];
-    if (at.toYmdHms() >= grainRain.toYmdHms()) candidates = '丙辛甲';
+  const month = pillars[1][1];
+  const base = seasonalCandidatesByDay[day][seasonalOrder.indexOf(month)];
+  const terms = at?.getLunar().getJieQiTable();
+  const after = name => terms && keyOf(at) >= keyOf(terms[name]);
+  let candidates = base;
+  let reason = '依日干與節月取基本候選';
+  if (day === '癸' && month === '辰' && after('谷雨')) {
+    candidates = '丙辛甲';
+    reason = '穀雨後，以辛甲輔丙';
   }
-  return [...candidates].map((stem, index) => {
+  if (day === '乙' && month === '酉' && after('秋分')) {
+    candidates = '丙癸';
+    reason = '秋分後，優先核對丙火照暖，再看癸水';
+  }
+  if (day === '乙' && month === '午' && after('夏至')) {
+    candidates = weights[3] + weights[4] >= 4 ? '丙癸' : '癸丙';
+    reason = '夏至後看丙癸，金水集中時提高丙火順序';
+  }
+  if (day === '乙' && month === '未' && weights[3] + weights[4] >= 4) {
+    candidates = '丙癸';
+    reason = '未月金水集中，先核對丙火';
+  }
+  if (day === '壬' && month === '丑' && after('大寒')) {
+    candidates = '丙甲';
+    reason = '大寒後，增加甲木輔助候選';
+  }
+  if (day === '癸' && month === '未' && !after('大暑')) {
+    candidates = '庚辛壬';
+    reason = '大暑前金弱火炎，另看壬水扶助';
+  }
+  const ranked = [...candidates].map((stem, index) => {
     const exposed = pillars.some((pillar, slot) => slot !== 2 && pillar[0] === stem);
     const rooted = pillars.some(pillar => branchStems(pillar[1]).includes(stem));
     const element = el(stem);
@@ -128,6 +152,7 @@ function springAdvice(pillars, weights, at) {
     return {stem, exposed, rooted, excess, element,
       boost: excess ? 0 : (exposed && rooted ? .65 : 1.15) / (index + 1)};
   });
+  return {ranked, reason};
 }
 
 function transformedElement(hits, slot, isStem) {
@@ -192,13 +217,13 @@ function natalModel(pillars, birth) {
     return balance.includes(element) ? 2 - balance.indexOf(element) * .25 :
       balance.length ? -1.6 : (1.8 - weight) * .4;
   });
-  const seasonalCandidates = springAdvice(pillars, weights, birth);
+  const {ranked: seasonalCandidates, reason: seasonalReason} = seasonalAdvice(pillars, weights, birth);
   const climateWithSeason = [...climate];
   if (!special) for (const candidate of seasonalCandidates) climateWithSeason[candidate.element] += candidate.boost;
   const preference = balanceScore.map((value, index) => value + climateWithSeason[index]);
   const priority = [...preference.keys()].sort((a, b) => preference[b] - preference[a]);
   return {pillars, day, weights, gods, roots, command, allies, state, support, monthStems, exposed,
-    special, ordinary, heat, dryness, climate: climateWithSeason, seasonalCandidates, balanceScore, preference, priority, hits};
+    special, ordinary, heat, dryness, climate: climateWithSeason, seasonalCandidates, seasonalReason, balanceScore, preference, priority, hits};
 }
 
 function chartModel(birth, gender) {
@@ -431,10 +456,10 @@ function renderNatal(out, model) {
     const description = model.seasonalCandidates.map(({stem, exposed, rooted, excess}) =>
       stem + '（' + (exposed ? '透干' : '未透干') + '、' + (rooted ? '藏支有根' : '藏支無根') +
       (excess ? '，同類已集中' : '') + '）').join('、');
-    article(out, '春月調候 · ' + model.day + '日' + model.pillars[1][1] + '月',
+    article(out, '節月調候 · ' + model.day + '日' + model.pillars[1][1] + '月',
       '依序核對' + description + '。' +
       (model.special ? '原局有特殊格候選，合併用神時以格局為先。' : '同類已集中時，該候選不額外加分。'),
-      '參考《窮通寶鑑》春月日干條目，癸日辰月另以穀雨時間分段。');
+      '參考《窮通寶鑑》日干條目。' + model.seasonalReason + '。');
   }
   heading(out, '原局刑沖合化');
   const list = node('ul', '');
