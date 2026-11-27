@@ -48,13 +48,14 @@ const relationRules = [
   ['害', '子未 丑午 寅巳 卯辰 申亥 酉戌', 1]
 ];
 
-function relations(pillars) {
+function relations(pillars, {crossChart = false} = {}) {
   const hits = [];
   for (const [kind, rules, column] of relationRules) {
     for (const rule of rules.split(' ')) {
       const [symbols, target] = rule.split(':');
       function match(offset, slots) {
         if (offset === symbols.length) {
+          if (crossChart && (!slots.some(slot => slot < 4) || !slots.some(slot => slot >= 4))) return;
           hits.push({kind, symbols, slots, target: target === undefined ? null : Number(target)});
           return;
         }
@@ -68,6 +69,7 @@ function relations(pillars) {
       match(0, []);
     }
   }
+  if (crossChart) return hits;
   const season = el(branchStems(pillars[1][1])[0]);
   for (const hit of hits.filter(hit => hit.target !== null)) {
     const stemJoin = hit.kind === '天干五合';
@@ -809,8 +811,7 @@ function aspectLabel(aspect) {
 function comparePeople(first, second) {
   const left = first.bazi;
   const right = second.bazi;
-  const shared = relations([...left.pillars, ...right.pillars]).filter(hit =>
-    hit.slots.some(slot => slot < 4) && hit.slots.some(slot => slot >= 4));
+  const shared = relations([...left.pillars, ...right.pillars], {crossChart:true});
   const relationships = shared.filter(hit => hit.slots.includes(2) || hit.slots.includes(6));
   const named = hit => hit.symbols + hit.kind + '（' + hit.slots.map(index =>
     (index < 4 ? '甲方' : '乙方') + labels[index % 4]).join('、') + '）';
@@ -822,10 +823,23 @@ function comparePeople(first, second) {
   const bPalace = ziweiTopic(second.ziwei, '夫妻');
   const personalBodies = point => ['Sun','Moon','Mercury','Venus','Mars'].includes(point.body);
   const aspects = westernAspects(first.western.positions.filter(personalBodies), second.western.positions.filter(personalBodies));
-  const friction = relationships.some(hit => pressure[hit.kind]) || aspects.some(aspect => aspect.conflict && aspect.orb < 3);
-  return {dayRelations, direction, aPalace, bPalace, aspects,
-    advice:friction ? '先協調衝突時的回覆時間、花費上限與家人介入界線。各選一個真實情境試行，再看對方是否履約。' :
-      '可以先做一件需要共同分工的事，把誰決定、誰執行與何時檢查約好，再觀察默契能否落實。'};
+  const friction = relationships.find(hit => pressure[hit.kind]);
+  const closeAspect = aspects.find(aspect => aspect.conflict && aspect.orb < 3);
+  const actions = {
+    Sun:'先談兩人各自想主導的事，寫清楚哪些決定要一起做',
+    Moon:'先約定情緒上來時怎麼暫停、何時回來把話說完',
+    Mercury:'有歧見時先複述對方意思，再各寫一個可執行的做法',
+    Venus:'先談共同預算、個人支出及雙方覺得被重視的方式',
+    Mars:'碰到趕時間或分工不均，先約定誰處理、誰支援'
+  };
+  const guidance = [];
+  if (friction) guidance.push(named(friction) + '，先確認同住作息、家庭界線和責任分工。');
+  if (closeAspect) {
+    const focus = [closeAspect.left, closeAspect.right].find(body => body !== 'Sun') || 'Sun';
+    guidance.push(aspectLabel(closeAspect) + '，' + actions[focus] + '。');
+  }
+  if (!guidance.length) guidance.push('先用一次共同分工檢查彼此默契。甲方留意' + aPalace.topic + '，乙方留意' + bPalace.topic + '。');
+  return {dayRelations, direction, aPalace, bPalace, aspects, advice:guidance.join('')};
 }
 // 三系統核心結束
 function locationFields(prefix) {
@@ -933,6 +947,16 @@ function printReport(out) {
     for (const section of collapsed) section.open = false;
   }
 }
+
+// 任一方修改出生資料後，清除需要重新計算的畫面。
+document.getElementById('entry').addEventListener('input', event => {
+  if (!event.target.matches('[name="birth_date"], [name="birth_time"], [name="gender"], [name="timezone"], .coord input')) return;
+  document.getElementById('chart').replaceChildren();
+  document.getElementById('pair-chart').replaceChildren();
+});
+document.getElementById('pair-form').addEventListener('input', () => {
+  document.getElementById('pair-chart').replaceChildren();
+});
 
 document.getElementById('pair-form').addEventListener('submit', event => {
   event.preventDefault();
