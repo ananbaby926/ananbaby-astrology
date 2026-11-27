@@ -166,6 +166,71 @@ function branchShares(branch) {
   return letters.map((stem, index) => [stem, fractions[index]]);
 }
 
+const luMonths = '寅卯巳午巳午申酉亥子';
+const bladeMonths = {甲:'卯', 丙:'午', 戊:'午', 庚:'酉', 壬:'子'};
+const concentrationPatterns = ['曲直','炎上','稼穡','從革','潤下'];
+
+// 真從、假從之分參考《滴天髓闡微》從象與假從。
+// 門檻為本站規則，故顯示候選與阻礙，並保留原局格局與運歲作用之別。
+function identifyPattern(day, month, lead, weights, support, allies, roots, command, hits) {
+  const self = el(day);
+  const dominant = weights.indexOf(Math.max(...weights));
+  const dominantRole = (dominant - self + 5) % 5;
+  const monthStar = god(day, lead);
+  const ordinary = luMonths[stems.indexOf(day)] === month ? '建祿候選' :
+    bladeMonths[day] === month ? '陽刃候選' :
+    ['比肩','劫財'].includes(monthStar) ? '比劫月令' : monthStar + '格候選';
+  const followTitle = {1:'從兒', 2:'從財', 3:'從殺'}[dominantRole];
+  if (followTitle && support <= .26 && weights[dominant] >= 4.5) {
+    const blockers = [
+      roots.length && '有同類根氣 ' + roots.join('、'),
+      allies && '印比透干 ' + allies + ' 位',
+      support > .12 && '原局扶助超過嚴格從格門檻'
+    ].filter(Boolean);
+    const evidence = '全局以' + names[dominant] + '集中（' + weights[dominant].toFixed(2) + '），' +
+      (blockers.length ? blockers.join('，') : '無同類根、無印比透干，從勢條件成立');
+    return {ordinary, special:blockers.length ? '' : followTitle, borderline:blockers.length ? followTitle : '',
+      type:'follow', dominant, evidence};
+  }
+  if (support >= .78 && dominant === self && weights[self] >= 5.5) {
+    const adverse = (self + 3) % 5;
+    const strongOfficers = weights[adverse] >= 1;
+    const rootClashed = hits.some(hit => hit.kind === '六沖' && hit.slots.includes(1));
+    const blockers = [
+      !command && '失月令支持',
+      roots.length < 3 && '同類通根不足三處',
+      (support < .88 || weights[self] < 6) && '扶助或同類集中度未達門檻',
+      strongOfficers && '官殺仍有足量制約',
+      rootClashed && '月支遭六沖'
+    ].filter(Boolean);
+    const title = concentrationPatterns[self] + '專旺';
+    return {ordinary, special:blockers.length ? '' : title, borderline:blockers.length ? title : '',
+      type:'concentration', dominant, evidence:'同類' + names[self] + '權重 ' + weights[self].toFixed(2) + '，' +
+        (blockers.length ? blockers.join('，') : '得令、根氣集中，未見足量官殺或月令六沖')};
+  }
+  return {ordinary, special:'', borderline:'', type:'ordinary', dominant, evidence:'以月令取格，核對司令藏干及透干'};
+}
+
+function patternPressure(model, movement, hits) {
+  if (!model.special) return {penalty:0, text:''};
+  const self = el(model.day);
+  const rootClash = hits.some(hit => hit.kind === '六沖' && hit.slots.includes(1));
+  if (model.pattern.type === 'concentration') {
+    const official = (self + 3) % 5;
+    const inbound = movement[official];
+    if (inbound >= 1.3 || rootClash) {
+      return {penalty:inbound * 2 + (rootClash ? 3 : 0), text:model.special +
+        '遇' + (inbound >= 1.3 ? names[official] + '官殺來制' : '') +
+        (rootClash ? (inbound >= 1.3 ? '、' : '') + '運歲沖月令' : '') + '，專旺條件受壓'};
+    }
+  }
+  if (model.pattern.type === 'follow') {
+    const aid = movement[self] + movement[parent(self)];
+    if (aid >= 1.6) return {penalty:aid * 2.2, text:model.special + '遇運歲印比同類扶身，原本從勢受到牽制'};
+  }
+  return {penalty:0, text:''};
+}
+
 function natalModel(pillars, birth) {
   const day = pillars[2][0];
   const self = el(day);
@@ -190,15 +255,11 @@ function natalModel(pillars, birth) {
   const monthElement = el(monthStems[0]);
   const command = [self, parent(self)].includes(monthElement);
   const allies = visible.filter((stem, index) => index !== 2 && [self, parent(self)].includes(el(stem))).length;
-  const dominant = weights.indexOf(Math.max(...weights));
   const state = support >= .59 ? '身強' : support <= .41 ? '身弱' : '中和';
   const exposed = monthStems.filter(stem => visible.some((item, index) => index !== 2 && item === stem));
   const lead = exposed[0] || monthStems[0];
-  const ordinary = {'比肩':'比劫月令', '劫財':'比劫月令'}[god(day, lead)] || god(day, lead) + '格候選';
-  const special = !roots.length && !allies && support <= .12 && weights[dominant] >= 4.5
-    ? ({1:'從兒', 2:'從財', 3:'從殺'}[(dominant - self + 5) % 5] || '')
-    : command && roots.length >= 3 && support >= .88 && dominant === self && weights[self] >= 6
-      ? ['曲直', '炎上', '稼穡', '從革', '潤下'][self] + '專旺' : '';
+  const pattern = identifyPattern(day, pillars[1][1], lead, weights, support, allies, roots, command, hits);
+  const {ordinary, special, dominant} = pattern;
   const [monthHeat, monthDryness] = seasonalClimate[branches.indexOf(pillars[1][1])];
   const heat = monthHeat + .38 * (weights[1] - weights[4]);
   const drySoil = pillars.filter(pillar => '未戌'.includes(pillar[1])).length;
@@ -223,7 +284,7 @@ function natalModel(pillars, birth) {
   const preference = balanceScore.map((value, index) => value + climateWithSeason[index]);
   const priority = [...preference.keys()].sort((a, b) => preference[b] - preference[a]);
   return {pillars, day, weights, gods, roots, command, allies, state, support, monthStems, exposed,
-    special, ordinary, heat, dryness, climate: climateWithSeason, seasonalCandidates, seasonalReason, balanceScore, preference, priority, hits};
+    special, ordinary, pattern, heat, dryness, climate: climateWithSeason, seasonalCandidates, seasonalReason, balanceScore, preference, priority, hits};
 }
 
 function chartModel(birth, gender) {
@@ -331,7 +392,8 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
   }
   const fit = movement.reduce((sum, weight, element) => sum + (weight + .55 * natalShift[element]) * model.preference[element], 0);
   const tension = hits.reduce((sum, hit) => sum + (pressure[hit.kind] || 0), 0);
-  const base = 62 + fit * 2.7 - tension * .85;
+  const patternStress = patternPressure(model, movement, hits);
+  const base = 62 + fit * 2.7 - tension * .85 - patternStress.penalty;
   const scores = domains.map(([label, targets, houses, action]) => {
     const partner = model.gender === 'male' ? ['正財', '偏財'] : ['正官', '七殺'];
     const candidates = (label === '婚姻與伴侶' ? partner : targets.split(' '))
@@ -363,7 +425,7 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
       ((model.gods[star] || 0) * .55).toFixed(2) + ' 加到 ' + stars[star].toFixed(2) +
       '，大運干／支本氣為' + (luck ? god(model.day, luck[0]) + '／' + god(model.day, branchStems(luck[1])[0]) : '未起運') +
       '，流年干／支本氣為' + god(model.day, year[0]) + '／' + god(model.day, branchStems(year[1])[0]) +
-      '。' + context;
+      '。' + context + (patternStress.text ? '。' + patternStress.text : '');
     return {label, star, score, advice, basis, opportunity, mistake, correction, friction};
   });
   const find = label => scores.find(score => score.label === label);
@@ -372,7 +434,7 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
     ['人際衝突警示', roundScore(80 - find('人際與合作').score + stars.傷官 * 4 + find('人際與合作').friction)],
     ['感情摩擦警示', roundScore(85 - find('感情').score + find('感情').friction * 2)]
   ];
-  return {luck, year, month, hits, fit, movement, natalShift, overall: roundScore(base), scores, risks};
+  return {luck, year, month, hits, fit, movement, natalShift, patternStress, overall: roundScore(base), scores, risks};
 }
 // 八字核心結束
 
@@ -449,8 +511,9 @@ function renderNatal(out, model) {
     '。扶抑候選 ' + (model.state === '中和' && !model.special ? '無明顯偏向' : namesOf(balance.slice(0, 2))) +
     '，調候候選 ' + namesOf(model.climate.map((value,index) => value > 0 ? index : -1).filter(index => index >= 0)) +
     '。綜合用神候選 ' + names[primary] + '，次喜 ' + names[secondary] + '，忌神候選 ' + namesOf(unwanted) + '。',
-    (model.special ? model.special + '候選（根氣、透干及集中度門檻）' : model.ordinary + '（月令透干優先）') +
-    '，寒熱值 ' + model.heat.toFixed(2) + '，燥濕值 ' + model.dryness.toFixed(2) +
+    (model.special ? model.special + '候選' : model.ordinary +
+      (model.pattern.borderline ? '，另有' + model.pattern.borderline + '傾向，仍採普通格扶抑' : '')) +
+    '。' + model.pattern.evidence + '。寒熱值 ' + model.heat.toFixed(2) + '，燥濕值 ' + model.dryness.toFixed(2) +
     '。調候採月令與原局火水、燥濕土加權。');
   if (model.seasonalCandidates.length) {
     const description = model.seasonalCandidates.map(({stem, exposed, rooted, excess}) =>
@@ -512,6 +575,7 @@ function renderAnnual(out, model, year, isCurrent) {
       if (Math.abs(shift) > .001) items.push(names[element] + ' ' + (shift > 0 ? '+' : '') + shift.toFixed(2));
       return items;
     }, []);
+    if (result.patternStress.text) note(box, result.patternStress.text);
     if (changed.length) note(box, '運歲加入後，原局合化權重變動｜' + changed.join('、'));
     const tracked = result.scores.slice(0, 9);
     const ranked = [...tracked].sort((a,b) => b.score - a.score);
