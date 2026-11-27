@@ -17,6 +17,7 @@ summary{cursor:pointer;font-weight:650}
   body[data-print-report="chart"] #pair,body[data-print-report="pair-chart"] #entry,
   main>section .birth-coords, #entry>h2,#entry>p,#pair>h2,#pair>p,#pair-chart button{display:none}
 }
+@media print{.raw-chart{display:none}}
 </style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>八字、紫微斗數、西洋占星與雙人合盤</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第十版命理測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・大限與流年</small></div><div class="feature"><b>西洋占星</b><small>本命星盤・上升與相位</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算三大命理（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><details class="birth-coords"><summary>西洋占星出生地座標</summary><p>請填出生地座標，或點選台北市。兩人出生時間均以 UTC+8 填寫。</p><div class="coord"><label>出生地緯度<input id="person-a-latitude" type="number" step="any" min="-65.99" max="65.99"></label><label>出生地經度<input id="person-a-longitude" type="number" step="any" min="-180" max="180"></label></div><button type="button" data-taipei="person-a">使用台北市座標</button></details><div id="chart" role="status"></div></section><section id="pair"><h2>雙人合盤</h2><p>甲方沿用上方資料。乙方資料僅用於這次試算。</p>
 <form id="pair-form"><label>乙方出生日期<input name="birth_date" type="date" required></label>
 <label>乙方出生時間<input name="birth_time" type="time" step="1" required></label>
@@ -465,6 +466,64 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
   ];
   return {luck, year, month, hits, fit, movement, natalShift, patternStress, overall: roundScore(base), scores, risks};
 }
+const everyday = {
+  事業:['有人找你幫忙收尾時，先看看自己手上還有多少事。最容易累的，是大家慢慢習慣你會接，卻沒人把這份心力算進去。','遇到想接的工作，可以拿一件做完的成果去談。當別人看得到你替他省了多少時間，你也比較容易開口談想要的位置。'],
+  創業:['如果點子很好，最難的可能是承認自己還不知道有沒有人願意付錢。先找一個願意下單的人，回饋會比周圍人的鼓勵實在。','可以把最常有人找你幫忙的那件事，試著做成一個小服務。接一單，就知道自己喜不喜歡連收款、修改和售後都一起做。'],
+  升遷:['主管說很看重你，卻一直把額外的事交給你時，你可以多問一句：下一次評估會看哪些成果？這能幫你分清楚，自己究竟在累積資歷，還是在替人補位。','若想往上走，找主管聊聊你最想獨立負責的那件事。把想要的決定權說清楚，這次談話會比單純等一句肯定更有方向。'],
+  財富:['忙了一個月，帳戶裡卻沒留下多少時，可以先翻最近三筆讓你意外的支出。你可能會發現，讓你有壓力的是替人先墊的錢，或零零碎碎加起來的開銷。','想知道日子能不能過得寬鬆一點，可以挑一筆最穩的收入算算：扣掉交通、工時和必要花費，到底能留下多少？這個數字比看起來忙不忙更貼近你的生活。'],
+  正財:['遇到收入穩定、下班時間卻一再往後延的工作，值得把真實工時記一週。你付出去的夜晚，也該算進這份工作的代價。','可以回頭看看哪些客戶會再找你、哪些工作讓你越做越熟。若想讓每個月安心一點，這些關係值得花時間經營。'],
+  偏財:['有人邀你加入新機會時，先問清楚第一筆收入什麼時候才會到手。即使最後沒有下文，也讓自己保有原來的生活安排。','有餘力的話，可以用一筆不影響生活的小預算試新方向。先訂好哪一天回頭看結果，就不用一路靠期待撐著。'],
+  感情:['當你說沒關係，心裡卻還在等對方發現你有點受傷，兩個人很容易各自以為事情過去了。可以從那個當下說起：昨天你臨時改時間，我其實有點失落。','平凡日子裡的約定最能看出兩人適不適合。你可以告訴對方，哪一個小動作會讓你覺得自己被放在心上，也聽聽對方的答案。'],
+  婚姻與伴侶:['聊到以後住哪裡、過年回誰家，若總是你先退一步，心裡可能會慢慢失去期待。選一件你真的在意的小事，看看對方願不願意和你一起想辦法。','想了解一個人適不適合長久相處，可以看看計畫被打亂的時候，他怎麼和你商量。一句會照顧你很動聽，臨時有事還記得替你留飯，也很值得記住。'],
+  家庭:['當大家都來問你怎麼辦，最累的往往是你還得猜每個人的心情。試著把其中一件事交給另一個家人，連決定怎麼做也交給他。','若想跟家人靠近一點，可以挑一件你真心願意一起做的事。一頓簡單的晚餐、一趟陪伴的車程，常比硬要聊出個結果來得自在。'],
+  子女與教養:['孩子遲遲不動時，你可能比他還急。先問他是不知道怎麼開始，還是怕做錯，再決定這次要陪他做第一步，或給他一點時間。','一起做件容許失敗的小事，例如讓孩子規劃半天行程。觀察他自己做了什麼決定，比急著替他做到最好，更容易看見他的長處。'],
+  置產:['看到喜歡的家，捨不得錯過很自然。再去一次，挑平日下班的時間走回家，順便算算搬進去後每個月還有多少錢可以自在運用。','看房時可以各自寫下三件希望回家就能得到的事。安靜、光線、離家人近，哪一項真的會讓你每天舒服一點？用答案再比較兩間喜歡的房子。'],
+  負債:['若繳款日前總覺得心裡有塊石頭，先把這個月一定要付的金額和日期排出來。弄清楚最吃緊的那一天，才知道需要的是挪時間還是減少支出。','趁手頭還有餘裕時，替下次大筆支出留一個位置。先知道自己每月能負擔多少，遇到臨時邀約會比較敢說出自己的界線。'],
+  貴人:['若一直等別人主動看見你，互相欣賞的人也可能擦身而過。帶一個最近真的卡住的問題去請教，對方才知道可以怎麼幫你。','想想最近有誰肯花時間看你的作品，還能說出哪裡可以更好。這樣的人值得你在下一次有進展時，回去告訴他後來怎麼了。'],
+  天賦:['你做起來很自然的事，往往會被你自己低估。回想朋友最近三次找你幫什麼忙，裡面也許就有一項是別人看得比你清楚的長處。','挑一件做完以後還會想再做一次的事，替它留一小段固定時間。有時候，天分是你願意回來反覆練習的那件事。'],
+  個性與弱點:['被誤會時，你可能急著把前因後果一次說完。留一點空間問對方剛剛聽到了什麼，也許會發現你們在意的根本是不同的事。','可以留意一下，你在哪些人面前最敢說真話。那個不用反覆斟酌每個字的自己，很值得你在其他關係裡也保留一點。'],
+  人際與合作:['有人臨時把工作交給你時，可以先問他原本答應了什麼。越熟的人越容易省略這一步，最後誰沒做到反而說不清楚。','若有一個你很想長期合作的人，可以先一起做件小事。觀察他怎麼面對遲到、改約或失誤，會比相處愉快時更看得出默契。']
+};
+
+function lifeText(item, period) {
+  if (item.label === '財富' && item.star === '偏財') {
+    return period.fit >= 0 && item.friction < 4 ?
+      '如果這陣子有人找你合作，先試著把一個小案子從頭做到收款。你會比較清楚，自己喜歡的是這份工作，還是剛被邀請時那份被看重的感覺。' :
+      '聽朋友聊起一個好機會，你可能一邊心動，一邊怕自己錯過。先留一晚，把要先付多少、多久才能收回寫下來。看清楚以後，那個決定會更像是你自己做的。';
+  }
+  if (item.label === '感情' && item.star === '食神' && item.friction < 4)
+    return '你們什麼時候最聊得來？也許是散步，也許是一起煮晚餐的時候。下次想談一件有點難開口的事，可以挑那種兩個人都自在的時刻，從你自己的感受說起。';
+
+  const difficult = item.friction >= 4 || period.fit < 0;
+  if (item.label === '感情' && !difficult && item.star === '正財')
+    return '兩個人願不願意替彼此分擔，常常藏在晚飯誰去買、今天誰繞路接誰這些小事裡。如果最近總是同一個人多做一點，找個輕鬆的時候商量一下，別讓心疼慢慢變成委屈。';
+  if (item.label === '事業' && item.star === '七殺' && !difficult)
+    return '遇到一件有點難、又讓你心動的工作，可以試著接。先找出遇到困難時能找誰一起解決，這樣你有機會挑戰自己，也不用把成敗都扛在肩上。';
+  return everyday[item.label][difficult ? 0 : 1];
+}
+
+const openingByStar = {
+  傷官:'你可能很快就看出事情哪裡卡住。大家還在討論時，你心裡已經想好另一個做法。遇到願意聽的人，那份敏銳很有用；遇到只想先被聽懂的人，可以稍微慢一點，問一句：你想一起想辦法，還是想先跟我說說？',
+  食神:'你可能記得朋友喜歡吃什麼，也知道怎樣讓一個尷尬的場面舒服起來。照顧氣氛是很細膩的本事，只是有時你也值得被問一句：那你自己想怎麼過？',
+  比肩:'你可能喜歡事情掌握在自己手裡。自己來比較快，也比較安心。只是忙到連吃飯都在想工作的時候，把一小件事交出去，你也能知道誰真的接得住你。',
+  劫財:'看到朋友有事，你可能比對方還快動手幫忙。這讓人很容易信任你。答應之前留一點時間看看自己手上的事，那份熱心才能給得甘願。',
+  正官:'你可能很在意自己答應過的事。別人一句放心交給你，對你既是肯定，也可能讓你很難說累。下次接下新責任前，可以把需要誰一起幫忙也說出來。',
+  七殺:'碰到突發狀況，你可能是先站出來處理的那個人。等事情過了，旁人才發現你其實也緊張。有人伸手幫忙的時候，偶爾把最費心的那一部分交出去也很好。',
+  正財:'你可能很重視日子裡可以依靠的小事。說好幾點見面、月底能留下多少錢，這些都會影響你的安心感。若有人願意把小約定放在心上，你往往記得很久。',
+  偏財:'遇到新機會時，你可能很快就想像得出它能變成什麼樣子。這份好奇心適合拿來開路。先挑一件最想試的，替其他點子留到下次，會比同時答應三件事輕鬆。',
+  正印:'你可能願意認真聽別人把話說完，也習慣先弄懂才行動。如果有件事已經準備很久，可以先做一個只有自己看得到的小版本，看看真正困難的地方在哪裡。',
+  偏印:'有些問題別人一句帶過，你卻會想追下去，直到找出自己的答案。這樣的專注很珍貴。想太久時，可以約一位你信任的人一起試一次，讓想法有機會走出腦袋。'
+};
+
+const partnerNeeds = {
+  紫微:'重要的決定有人先來問自己的想法', 天機:'計畫有變時，對方願意早一點告知', 太陽:'自己的付出能被看見，也有人主動回應',
+  武曲:'兩個人說好怎麼分擔，最後也真的做得到', 天同:'相處時能放鬆，偶爾安靜也自在', 廉貞:'哪些話算承諾、哪些事會越界，彼此說得清楚',
+  天府:'遇到變動時，兩人還保有熟悉的生活節奏', 太陰:'心情低落時，有人記得自己平常在意的小事',
+  貪狼:'忙碌之餘，兩人還會一起去嘗試新鮮的事', 巨門:'有疑問可以好好問，對方也肯把話說完',
+  天相:'遇到意見不同，兩人的考量能被公平對待', 天梁:'自己累的時候，也有人願意接手照顧',
+  七殺:'需要做決定時，對方願意表態、一起承擔', 破軍:'生活有改變，兩人還願意一起重新商量'
+};
+
 // 八字核心結束
 
 function taipeiNow() {
@@ -517,46 +576,12 @@ function renderNatal(out, model) {
   [...model.pillars].reverse().forEach(([stem, branch], index) => {
     const cell = node('div', '', 'pillar' + (index === 1 ? ' day' : ''));
     cell.append(node('b', ['時柱','日柱','月柱','年柱'][index]));
-    cell.append(node('small', index === 1 ? '日主' : god(model.day, stem)), colored(stem), colored(branch));
-    for (const letter of branchStems(branch)) {
-      cell.append(node('small', letter + ' · ' + god(model.day, letter), classes[el(letter)]));
-    }
+    cell.append(colored(stem), colored(branch));
+
     grid.append(cell);
   });
   out.append(grid);
-  const namesOf = elements => elements.map(element => names[element]).join('、') || '無明顯偏向';
-  const [primary, secondary] = model.priority;
-  const unwanted = model.priority.filter(element => model.preference[element] < -.45);
-  const balance = [...model.balanceScore.keys()].sort((a,b) => model.balanceScore[b] - model.balanceScore[a]);
-  article(out, model.day + '日主 · ' + model.state,
-    '扶助比重 ' + Math.round(model.support * 100) + '%。' + (model.command ? '得令' : '失令') +
-    '，同類藏干通根 ' + (model.roots.join('、') || '無') + '，干上印比 ' + model.allies + ' 位。' +
-    '五行權重 ' + model.weights.map((weight, index) => names[index] + weight.toFixed(2)).join('、') + '。',
-    '月令 ' + model.pillars[1][1] + '，藏干 ' + model.monthStems.join('、') +
-    '，月令藏干透出 ' + (model.exposed.join('、') || '無'));
-  article(out, '調候、格局與用神',
-    '原局' + (model.heat < -1.4 ? '偏寒' : model.heat > 1.4 ? '偏熱' : '寒暖中間') + '、' +
-    (model.dryness < -1.4 ? '偏濕' : model.dryness > 1.4 ? '偏燥' : '燥濕中間') +
-    '。扶抑候選 ' + (model.state === '中和' && !model.special ? '無明顯偏向' : namesOf(balance.slice(0, 2))) +
-    '，調候候選 ' + namesOf(model.climate.map((value,index) => value > 0 ? index : -1).filter(index => index >= 0)) +
-    '。綜合用神候選 ' + names[primary] + '，次喜 ' + names[secondary] + '，忌神候選 ' + namesOf(unwanted) + '。',
-    (model.special ? model.special + '候選' : model.ordinary +
-      (model.pattern.borderline ? '，另有' + model.pattern.borderline + '傾向，仍採普通格扶抑' : '')) +
-    '。' + model.pattern.evidence + '。寒熱值 ' + model.heat.toFixed(2) + '，燥濕值 ' + model.dryness.toFixed(2) +
-    '。調候採月令與原局火水、燥濕土加權。');
-  if (model.seasonalCandidates.length) {
-    const description = model.seasonalCandidates.map(({stem, exposed, rooted, excess}) =>
-      stem + '（' + (exposed ? '透干' : '未透干') + '、' + (rooted ? '藏支有根' : '藏支無根') +
-      (excess ? '，同類已集中' : '') + '）').join('、');
-    article(out, '節月調候 · ' + model.day + '日' + model.pillars[1][1] + '月',
-      '依序核對' + description + '。' +
-      (model.special ? '原局有特殊格候選，合併用神時以格局為先。' : '同類已集中時，該候選不額外加分。'),
-      '參考《窮通寶鑑》日干條目。' + model.seasonalReason + '。');
-  }
-  heading(out, '原局刑沖合化');
-  const list = node('ul', '');
-  for (const hit of model.hits) list.append(node('li', describe(hit)));
-  out.append(model.hits.length ? list : node('p', '此模型未檢出原局完整組合。'));
+
 }
 
 function renderDirections(out, model, current) {
@@ -567,19 +592,13 @@ function renderDirections(out, model, current) {
     const seasonalPressure = current.movement[element];
     return {element, score: fit + (fit < 0 ? -seasonalPressure : Math.min(1.4, seasonalPressure))};
   }).sort((a,b) => b.score - a.score);
-  const explain = element => directions[element] + '（' + names[element] +
-    '，扶抑與格局 ' + model.balanceScore[element].toFixed(1) + '，調候 ' + model.climate[element].toFixed(1) + '）';
   heading(out, '房屋方位');
-  article(out, '長期居住',
-    '首選 ' + explain(order[0]) + '，次選 ' + explain(order[1]) + '，相對不建議 ' + explain(order.at(-1)) + '。',
-    model.state + '、' + (model.special || model.ordinary) + '，以原局用神合併調候排序。');
-  article(out, '階段性選擇',
-    '首選 ' + explain(timed[0].element) + '，次選 ' + explain(timed[1].element) +
-    '，相對不建議 ' + explain(timed.at(-1).element) + '。',
-    (current.luck || '未起運') + '大運與' + current.year + '年使' +
-    names[current.movement.indexOf(Math.max(...current.movement))] +
-    '的作用最集中。運歲對喜用作加強，對忌神累積作扣分。');
-  note(out, '此處是八字五行的方位參考。實際看屋仍需核對門向、採光、通風和現場格局。');
+  const describeOrder = list => '可以先看朝' + directions[list[0]] + '的房子，其次是' + directions[list[1]] +
+    '。若選擇夠多，' + directions[list.at(-1)] + '可以排在後面。';
+  article(out, '打算長住', describeOrder(order));
+  article(out, '這幾年看房時', describeOrder(timed.map(row => row.element)) +
+    ' 如果你喜歡兩間不同朝向的房子，挑你平常回家的時段各去一次。走進客廳後，哪一間讓你真的想坐下來休息？');
+
 }
 
 function renderAnnual(out, model, year, isCurrent) {
@@ -599,23 +618,18 @@ function renderAnnual(out, model, year, isCurrent) {
     for (const item of [...tracked, ...result.risks]) {
       const detail = node('details', '', 'annual-metric');
       detail.append(node('summary', item.label + ' ' + item.score + '%'),
-        node('p', item.advice), node('small', '命理依據｜' + item.basis));
+        node('p', lifeText(result.scores.find(score => score.label ===
+          ({破財警示:'負債',人際衝突警示:'人際與合作',感情摩擦警示:'感情'}[item.label] || item.label)), result)));
       metrics.append(detail);
     }
     box.append(metrics);
-    const changed = result.natalShift.reduce((items, shift, element) => {
-      if (Math.abs(shift) > .001) items.push(names[element] + ' ' + (shift > 0 ? '+' : '') + shift.toFixed(2));
-      return items;
-    }, []);
-    if (result.patternStress.text) note(box, result.patternStress.text);
-    if (changed.length) note(box, '運歲加入後，原局合化權重變動｜' + changed.join('、'));
     const ranked = [...tracked].sort((a,b) => b.score - a.score);
     const best = ranked[0];
     const worst = ranked.at(-1);
     const nextRisk = ranked.at(-2);
-    article(box, '最值得把握 · ' + best.label, '可以先' + best.opportunity + '。' + best.advice, best.basis);
-    article(box, '最容易犯的錯 · ' + worst.label, worst.advice, worst.basis);
-    article(box, '最不適合 · ' + nextRisk.label, '避免' + nextRisk.mistake + '。' + nextRisk.correction + '。', nextRisk.basis);
+    article(box, '今年可以把握的事 · ' + best.label, lifeText(best, result));
+    article(box, '今年容易吃虧的地方 · ' + worst.label, lifeText(worst, result));
+    article(box, '別急著答應的事 · ' + nextRisk.label, lifeText(nextRisk, result));
   }
   const monthly = node('details', '');
   monthly.append(node('summary', '十二節氣月'));
@@ -629,8 +643,7 @@ function renderAnnual(out, model, year, isCurrent) {
         const top = ranked[0];
         const low = ranked.at(-1);
         article(monthly, jieNames[index] + ' · ' + result.month + ' · ' + result.overall + '%',
-          keyOf(part.start) + ' 起。' + top.label + '：' + top.advice + ' ' + low.label + '：' + low.advice,
-          top.basis + '；' + low.basis);
+          keyOf(part.start).slice(0,10) + ' 起。' + lifeText(top, result) + ' ' + lifeText(low, result));
       }
     }
   }
@@ -648,11 +661,16 @@ function renderAnnual(out, model, year, isCurrent) {
 }
 
 function renderReport(out, model, now) {
-  renderNatal(out, model);
-  heading(out, '十年大運');
+  const current = reading(model, keyOf(now) < keyOf(model.birth) ? model.birth : now);
+  const strongest = Object.entries(model.gods).sort((a,b) => b[1] - a[1])[0][0];
+  article(out, '先聊聊你自己', openingByStar[strongest]);
+  const charts = node('details', '', 'raw-chart');
+  charts.append(node('summary', '查看出生和交運資料'));
+  renderNatal(charts, model);
+  out.append(charts);
+  heading(charts, '十年大運');
   const currentPeriod = activeLuck(model, now);
-  note(out, (model.forward ? '順行' : '逆行') + '｜首交運 ' + keyOf(model.start) +
-    '｜採 lunar-javascript 第 2 法的節氣分鐘換算。');
+  note(charts, '第一次交運 ' + keyOf(model.start));
   const luckList = node('div', '', 'luck-list');
   const index = currentPeriod ? model.periods.indexOf(currentPeriod) : 0;
   const startIndex = Math.max(0, index - 2);
@@ -663,11 +681,12 @@ function renderReport(out, model, now) {
       node('small', keyOf(period.start) + ' 起'), node('small', keyOf(period.end) + ' 交下運'));
     luckList.append(card);
   }
-  out.append(luckList);
+  charts.append(luckList);
   if (keyOf(now) < keyOf(model.birth)) note(out, '目前日期早於出生，個人化主題以出生時點試算。');
-  const current = reading(model, keyOf(now) < keyOf(model.birth) ? model.birth : now);
-  heading(out, '個人主題 · ' + current.year + '流年 × ' + (current.luck ? current.luck + '大運' : '未起運'));
-  for (const item of current.scores) article(out, item.label, item.advice, item.basis);
+  const overview = node('div', '', 'annual-overview');
+  heading(overview, '今年的你');
+  for (const item of current.scores) article(overview, item.label, lifeText(item, current));
+  out.append(overview);
   renderDirections(out, model, current);
   heading(out, '年度好運指數走勢');
   note(out, '百分比是自訂命理傾向評分。交運年分段解讀，折線按各段時長取平均。');
@@ -682,7 +701,7 @@ function renderReport(out, model, now) {
     if (point) points.push(point);
   }
   graph(plot, points);
-  note(out, '使用台灣標準時間 UTC+8。晚子時日柱採當日，未校正歷史夏令時間、真太陽時。格局、合化與調候依本站規則示範。');
+
   const print = node('button', '列印／儲存 PDF');
   print.type = 'button';
   print.onclick = () => printReport(out);
@@ -712,7 +731,13 @@ document.getElementById('calculate').onclick = () => {
       const coords = locationFields('person-a');
       const profile = {reading:reading(natal, at), ziwei, western:westernChart(birth, ...coords)};
       renderWestern(out, profile.western);
-      renderCombined(out, profile);
+      const combined = node('div', '');
+      renderCombined(combined, profile);
+      const overview = out.querySelector('.annual-overview');
+      overview.replaceChildren(combined);
+      for (const item of profile.reading.scores.filter(item => ['正財','偏財'].includes(item.label))) {
+        article(overview, item.label, lifeText(item, profile.reading));
+      }
     } catch (error) {
       note(out, '部分報告未產生：' + error.message);
     }
@@ -807,7 +832,7 @@ function ziweiTopic(ziwei, name) {
   if (annualTheme) layers.push('今年尤其要看' + annualTheme);
   if (concern) layers.push(applied.filter(star => star.endsWith('忌')).join('、') + '是今年優先核對的環節，先釐清反覆卡住的事情');
   if (favourable) layers.push(applied.filter(star => /[祿權科]$/.test(star)).join('、') + '提供可檢視的進展方向');
-  return {basis, topic, concern, favourable, interpretation:layers.join('。') + '。', natal};
+  return {basis, topic, need:partnerNeeds[stars[0]?.name] || '彼此有機會說清楚自己的期待', concern, favourable, interpretation:layers.join('。') + '。', natal};
 }
 
 const houseThemes = [
@@ -842,13 +867,14 @@ function combinedTopics(bazi, ziwei, western) {
     const westernBasis = westernBodies[body] + zodiac[position.sign] + '，第 ' + position.house + ' 宮，對應' +
       focus + (aspect ? '，另見' + aspectLabel(aspect) : '');
     const baziPressure = eastern.friction >= 4 || bazi.fit < 0;
-    let synthesis = '八字和紫微指出的環節分開觀察，先從近期遇到的一件事核對。';
-    if (baziPressure && purple.concern) synthesis = '八字和紫微今年都提示要先處理卡住的環節。';
-    if (baziPressure && purple.favourable) synthesis = '紫微有可推進的方向，八字同時提示阻力，適合先把規模縮小再試。';
-    const westernReading = '西洋本命盤長期可觀察' + focus + '。' +
-      (aspect?.conflict ? '遇到分歧時，' : '可以先') + practical + '。';
-    return {label, bazi:eastern, purple, westernBasis, westernReading,
-      conclusion:synthesis + eastern.advice + ' ' + purple.interpretation + ' ' + westernReading};
+    const both = baziPressure && purple.concern;
+    const bridge = both ? '如果最近已經為這件事來回操心，可以把時間拉短，先談好這一星期怎麼過。' :
+      purple.favourable && baziPressure ? '若有人願意幫忙，先和對方試一件小事。等你確定負擔得來，再接下一步。' : '';
+    const closing = aspect?.conflict ? '一碰到' + focus + '就覺得為難時，可以' + practical + '。' :
+      '想試試看的話，可以從' + focus + '開始：' + practical + '。';
+    return {label, bazi:eastern, purple, westernBasis, westernReading:closing,
+      conclusion:lifeText(eastern, bazi) + (bridge ? ' ' + bridge : '') + ' ' + closing};
+
   });
 }
 
@@ -935,9 +961,14 @@ function completeProfile(data, coords, reference, natal) {
 }
 
 function renderZiwei(out, ziwei) {
+  heading(out, '你在關係裡看重的事');
+  const partner = ziweiTopic(ziwei, '夫妻');
+  article(out, '什麼會讓你覺得被珍惜', '對你來說，' + partner.need + '，可能就很有分量。回想上一次你覺得被好好對待，那個人做了什麼？有時把那個小細節告訴對方，比請他「多關心一點」更容易懂。');
+
   const {chart, horoscope} = ziwei;
-  heading(out, '紫微斗數 · 十二宮');
-  note(out, '命宮 ' + chart.earthlyBranchOfSoulPalace + '、身宮 ' + chart.earthlyBranchOfBodyPalace + '、' +
+  const raw = node('details', '', 'raw-chart');
+  raw.append(node('summary', '查看紫微十二宮星盤'));
+  note(raw, '命宮 ' + chart.earthlyBranchOfSoulPalace + '、身宮 ' + chart.earthlyBranchOfBodyPalace + '、' +
     chart.fiveElementsClass + '。目前大限 ' + horoscope.decadal.heavenlyStem + horoscope.decadal.earthlyBranch +
     '，流年 ' + horoscope.yearly.heavenlyStem + horoscope.yearly.earthlyBranch + '。');
   const grid = node('div', '', 'luck-list');
@@ -949,13 +980,9 @@ function renderZiwei(out, ziwei) {
       node('small', palace.decadal.range.join('–') + ' 歲大限'));
     grid.append(card);
   }
-  out.append(grid);
-  for (const name of ['命宮','官祿','財帛','夫妻','田宅','子女','福德','僕役']) {
-    const result = ziweiTopic(ziwei, name);
-    article(out, name.endsWith('宮') ? name : name + '宮', '這段時間先核對' + result.topic +
-      (result.concern ? '，涉及承諾時要留下可回頭核對的紀錄。' : '，把自己能掌握的部分先談清楚。'), result.basis);
-  }
-  note(out, '使用 iztro 繁中排盤，閏月前十五日歸同月、十六日起歸下月；紫微時辰與流年大限依套件口徑。');
+  raw.append(grid);
+  out.append(raw);
+
 }
 
 function formatPlacement(longitude) {
@@ -963,25 +990,29 @@ function formatPlacement(longitude) {
 }
 
 function renderWestern(out, western) {
-  heading(out, '西洋占星 · 本命盤');
+  heading(out, '你習慣怎麼表達在乎');
+  const moon = western.positions.find(point => point.body === 'Moon');
+  const [focus, action] = houseThemes[moon.house - 1];
+  out.append(node('p', '如果想讓身邊的人多懂你一點，可以從' + focus + '聊起。例如，' + action + '。也給對方一點時間，說說他會怎麼選。'));
+
+  const raw = node('details', '', 'raw-chart');
+  raw.append(node('summary', '查看西洋星盤位置'));
   const grid = node('div', '', 'luck-list');
   grid.append(node('div', '上升 ' + formatPlacement(western.ascendant), 'pillar day'));
   for (const point of western.positions) grid.append(node('div',
     westernBodies[point.body] + ' ' + formatPlacement(point.longitude) + ' · 第 ' + point.house + ' 宮', 'pillar'));
-  out.append(grid);
+  raw.append(grid);
   const list = node('ul', '');
   for (const aspect of western.aspects) list.append(node('li', aspectLabel(aspect)));
-  out.append(western.aspects.length ? list : node('p', '在指定容許度內未檢出主要相位。'));
-  note(out, '使用 Astronomy Engine 地心熱帶黃道與整宮制。上升點依出生地經緯度計算，出生時間採 UTC+8。');
+  raw.append(western.aspects.length ? list : node('p', '在指定容許度內未檢出主要相位。'));
+  out.append(raw);
 }
 
 function renderCombined(out, profile) {
   heading(out, '三大命理綜合報告');
   for (const item of combinedTopics(profile.reading, profile.ziwei, profile.western)) {
     const box = node('article', '');
-    box.append(node('h4', item.label), node('p', item.conclusion),
-      node('p', '八字｜' + item.bazi.advice + ' ' + item.bazi.basis),
-      node('p', '紫微｜' + item.purple.basis), node('p', '西洋｜' + item.westernBasis));
+    box.append(node('h4', item.label), node('p', item.conclusion));
     out.append(box);
   }
 }
@@ -989,22 +1020,16 @@ function renderCombined(out, profile) {
 function renderPair(out, first, second) {
   const result = comparePeople(first, second);
   heading(out, '雙人合盤');
-  article(out, '八字 · 夫妻宮與喜用', (result.dayRelations.join('、') || '夫妻宮未檢出本站兩盤交互組合') + '。',
-    '甲方 ' + first.bazi.day + '日主看乙方 ' + second.bazi.day + '，' +
-    (result.direction[0] ? '乙方日干五行在甲方原局屬正向取用' : '乙方日干五行在甲方原局未列入正向取用') +
-    '。乙方看甲方，' + (result.direction[1] ? '甲方日干五行在乙方原局屬正向取用' : '甲方日干五行在乙方原局未列入正向取用') +
-    '。日干只代表其中一項五行互動。');
-  article(out, '紫微 · 伴侶期待', '甲方先談' + result.aPalace.topic + '，乙方先談' + result.bPalace.topic + '。',
-    '甲方 ' + result.aPalace.basis + '。乙方 ' + result.bPalace.basis);
-  article(out, '西洋 · 雙盤行星相位',
-    result.aspects.slice(0, 8).map(aspect => '甲方' + aspectLabel(aspect).replace('與', '與乙方')).join('、') ||
-      '兩人的個人行星在指定容許度內沒有主要交互相位。',
-    '比較雙方的太陽、月亮、水星、金星及火星。');
+  const names = [result.aPalace.need, result.bPalace.need];
+  const start = names[0] === names[1] ? '兩個人可能都很重視一件事：' + names[0] + '。即使期待相近，你們記得的那個小細節也可能不一樣。' :
+    '第一位填資料的人可能尤其在意，' + names[0] + '。另一位在乎的可能是，' + names[1] + '。兩種期待都有機會被照顧到，只是得讓對方知道。';
+  article(out, '什麼會讓彼此覺得被愛', start);
   for (const story of result.stories) {
-    article(out, story.label, story.advice || '這一項在設定的容許度內沒有主要相位，可從實際相處觀察。', story.evidence);
+    if (story.advice) article(out, story.label, story.advice);
   }
-  article(out, '相處建議', result.advice);
-  note(out, '合盤用來整理彼此可以觀察和討論的事，兩人的決定以實際相處為準。');
+  const focus = result.stories.find(story => story.evidence && story.advice);
+  article(out, '相處建議', focus ? '讀到「' + focus.label + '」時，你們也許各自想到一件不同的事。可以各說一個最近的小片段，先聽對方那天是怎麼想的，再談下次想換個什麼做法。' :
+    '如果有件很小的事曾經讓你覺得被放在心上，可以說給對方聽。從那件事開始聊，比一次問兩人到底合不合更容易得到真心的答案。');
   const print = node('button', '列印／儲存雙人 PDF');
   print.type = 'button';
   print.onclick = () => printReport(out);
@@ -1012,7 +1037,7 @@ function renderPair(out, first, second) {
 }
 
 function printReport(out) {
-  const sections = [...out.querySelectorAll('details')];
+  const sections = [...out.querySelectorAll('details:not(.raw-chart)')];
   const collapsed = sections.filter(section => !section.open);
   for (const section of sections) {
     section.open = true;
