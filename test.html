@@ -1,4 +1,17 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>神機妙算安安貝比</title><style>*{box-sizing:border-box}body{margin:0;background:#faf7f0;color:#695548;font:16px/1.7 system-ui,sans-serif}main{max-width:680px;margin:auto;padding:24px}header{text-align:center;padding:30px 0}h1{font-size:30px;margin:8px}small{color:#826e5e}section{background:#fffdfa;border:1px solid #e7dacb;border-radius:24px;padding:24px;margin:16px 0}label{display:block;margin:12px 0}input,select,button{font:inherit;border:1px solid #d9c9b7;border-radius:12px;padding:10px;width:100%;background:#faf7f0;color:inherit}button{background:#80664f;color:white;cursor:pointer;margin-top:12px}input[type=checkbox]{width:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}details{margin-top:20px}article{border-bottom:1px solid #e7dacb;padding:12px 0}button:disabled{opacity:.5}main{max-width:900px}header{padding:48px 0 30px}h1{font-family:serif;font-size:clamp(28px,6vw,48px)}.hero{color:#a58a57;letter-spacing:3px}.wheel{width:140px;height:140px;margin:20px auto;border:1px solid #b69b69;border-radius:50%;display:grid;place-items:center;outline:1px solid #d8c5a4;outline-offset:8px;font-size:64px;color:#a58a57}.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px}.feature{background:#fffdfa;border:1px solid #e7dacb;border-radius:16px;padding:18px;text-align:center}.feature b{display:block;font-size:19px}.feature small{display:block}.cta{display:block;background:#91754d;color:white;text-decoration:none;padding:14px;border-radius:14px;margin:24px auto;max-width:360px}input,select{display:block}input[type=checkbox]{display:inline}footer{text-align:center;font-size:13px;padding:24px} .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pillar{text-align:center;border:1px solid #e7dacb;border-radius:12px;padding:10px}.pillar strong{display:block;font-size:26px} [hidden]{display:none!important} .pillar{background:#fff;border-color:#e5dccb;padding:12px 4px}.pillar.day{background:#f0e7d5}.pillar strong{font-size:clamp(25px,6vw,38px);line-height:1.4}.pillar small{display:block;font-size:12px}.wood{color:#43865B}.fire{color:#CF4545}.earth{color:#795039}.metal{color:#C2A56D}.water{color:#3265B5}.scroll{overflow-x:auto}.luck{display:flex;flex-direction:row-reverse;gap:8px;min-width:max-content}.luck .pillar{min-width:85px}.bar{height:9px;border-radius:8px;background:#eee5d9;overflow:hidden}.bar i{display:block;height:100%}.note{font-size:13px;color:#826e5e}.charthead{color:#91754d} @media(max-width:480px){main{padding:12px}section{padding:14px}.pillars{gap:4px}} .pillar small{font-size:14px}.charthead{margin-top:28px}#chart article h4{margin:12px 0 4px;color:#795039}#chart article p{margin:8px 0} @media(max-width:480px){main{padding:12px}section{padding:14px}.pillars{gap:4px}.pillar small{font-size:12px}}.annual-card{padding:20px;margin:16px 0;border:1px solid #d9c8a6;border-radius:14px;font-size:16px;line-height:1.75}.annual-score{display:block;font-size:26px;color:#94743c;margin:8px 0}.current-year{border:2px solid #C2A56D;background:#fff9ed}</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>探索命運・認識自己・掌握人生方向</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第五版測試｜傳統文化與娛樂參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・星曜｜開發中</small></div><div class="feature"><b>西洋占星</b><small>星盤・相位｜開發中</small></div></div><section><h2>探索人生主題</h2><div class="features"><div class="feature"><b>感情婚姻</b><small>開發中</small></div><div class="feature"><b>事業發展</b><small>開發中</small></div><div class="feature"><b>財富分析</b><small>開發中</small></div><div class="feature"><b>年度流年</b><small>開發中</small></div><div class="feature"><b>雙人合盤</b><small>開發中</small></div><div class="feature"><b>綜合命理報告</b><small>開發中</small></div></div></section><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算八字（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><div id="chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script>
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>神機妙算安安貝比</title><style>*{box-sizing:border-box}body{margin:0;background:#faf7f0;color:#695548;font:16px/1.7 system-ui,sans-serif}main{max-width:680px;margin:auto;padding:24px}header{text-align:center;padding:30px 0}h1{font-size:30px;margin:8px}small{color:#826e5e}section{background:#fffdfa;border:1px solid #e7dacb;border-radius:24px;padding:24px;margin:16px 0}label{display:block;margin:12px 0}input,select,button{font:inherit;border:1px solid #d9c9b7;border-radius:12px;padding:10px;width:100%;background:#faf7f0;color:inherit}button{background:#80664f;color:white;cursor:pointer;margin-top:12px}input[type=checkbox]{width:auto}pre{white-space:pre-wrap;overflow-wrap:anywhere}details{margin-top:20px}article{border-bottom:1px solid #e7dacb;padding:12px 0}button:disabled{opacity:.5}main{max-width:900px}header{padding:48px 0 30px}h1{font-family:serif;font-size:clamp(28px,6vw,48px)}.hero{color:#a58a57;letter-spacing:3px}.wheel{width:140px;height:140px;margin:20px auto;border:1px solid #b69b69;border-radius:50%;display:grid;place-items:center;outline:1px solid #d8c5a4;outline-offset:8px;font-size:64px;color:#a58a57}.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(135px,1fr));gap:12px}.feature{background:#fffdfa;border:1px solid #e7dacb;border-radius:16px;padding:18px;text-align:center}.feature b{display:block;font-size:19px}.feature small{display:block}.cta{display:block;background:#91754d;color:white;text-decoration:none;padding:14px;border-radius:14px;margin:24px auto;max-width:360px}input,select{display:block}input[type=checkbox]{display:inline}footer{text-align:center;font-size:13px;padding:24px} .pillars{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}.pillar{text-align:center;border:1px solid #e7dacb;border-radius:12px;padding:10px}.pillar strong{display:block;font-size:26px} [hidden]{display:none!important} .pillar{background:#fff;border-color:#e5dccb;padding:12px 4px}.pillar.day{background:#f0e7d5}.pillar strong{font-size:clamp(25px,6vw,38px);line-height:1.4}.pillar small{display:block;font-size:12px}.wood{color:#43865B}.fire{color:#CF4545}.earth{color:#795039}.metal{color:#C2A56D}.water{color:#3265B5}.scroll{overflow-x:auto}.luck{display:flex;flex-direction:row-reverse;gap:8px;min-width:max-content}.luck .pillar{min-width:85px}.bar{height:9px;border-radius:8px;background:#eee5d9;overflow:hidden}.bar i{display:block;height:100%}.note{font-size:13px;color:#826e5e}.charthead{color:#91754d} @media(max-width:480px){main{padding:12px}section{padding:14px}.pillars{gap:4px}} .pillar small{font-size:14px}.charthead{margin-top:28px}#chart article h4{margin:12px 0 4px;color:#795039}#chart article p{margin:8px 0} @media(max-width:480px){main{padding:12px}section{padding:14px}.pillars{gap:4px}.pillar small{font-size:12px}}.annual-card{padding:20px;margin:16px 0;border:1px solid #d9c8a6;border-radius:14px;font-size:16px;line-height:1.75}.annual-score{display:block;font-size:26px;color:#94743c;margin:8px 0}.current-year{border:2px solid #C2A56D;background:#fff9ed}body{font-size:18px}
+.charthead{margin-top:28px}
+#chart article p{margin:.4em 0}
+.luck-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:8px}
+.current-year{border:2px solid #C2A56D;background:#fcf4e5}
+.annual-card{padding:14px;margin:10px 0}
+summary{cursor:pointer;font-weight:650}
+.metrics{display:grid;grid-template-columns:1fr auto;gap:3px 16px;max-width:430px}
+.metrics dd{margin:0;font-variant-numeric:tabular-nums}
+.trend{overflow:auto}
+.trend svg{width:100%;min-width:450px}
+@media(max-width:480px){main{padding:12px}section{padding:14px}.pillar small{font-size:.67em}}
+@media print{header,.features,footer,form,main>section:last-of-type,#chart button{display:none}main,section{padding:0;border:0}#chart article{break-inside:avoid}.trend svg{min-width:0}}
+</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>四柱、大運、流年與流月試算</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第九版八字測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・星曜｜開發中</small></div><div class="feature"><b>西洋占星</b><small>星盤・相位｜開發中</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算八字（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><div id="chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script>
 const stems='甲乙丙丁戊己庚辛壬癸', branches='子丑寅卯辰巳午未申酉戌亥';
 const groups=['甲乙寅卯','丙丁巳午','戊己辰戌丑未','庚辛申酉','壬癸亥子'], classes=['wood','fire','earth','metal','water'], names=['木','火','土','金','水'], colors=['#43865B','#CF4545','#795039','#C2A56D','#3265B5'];
 const hidden=['癸','己癸辛','甲丙戊','乙','戊乙癸','丙戊庚','丁己','己丁乙','庚壬戊','辛','戊辛丁','壬甲'];
@@ -8,59 +21,511 @@ function node(tag,t,cls){const n=document.createElement(tag);n.textContent=t;if(
 function colored(c){return node('strong',c,classes[el(c)])}
 function heading(out,t){out.append(node('h3',t,'charthead'))}
 function note(out,t){out.append(node('p',t,'note'))}
-function strip(out,items){const wrap=node('div','','scroll'),row=node('div','','luck');for(const [label,gz,extra] of items){const c=node('div','','pillar');c.append(node('small',label),colored(gz[0]),colored(gz[1]),node('small',extra||''));row.append(c)}wrap.append(row);out.append(wrap);wrap.scrollLeft=wrap.scrollWidth}
-function report4(out,ec){
- const dm=ec.getDay()[0], a=el(dm), p=['Year','Month','Day','Time'].map(k=>ec['get'+k]()), w=[0,0,0,0,0], g={};
- p.forEach((gz,i)=>{if(i!==2){w[el(gz[0])]+=1;const t=god(dm,gz[0]);g[t]=(g[t]||0)+1}const hs=hidden[branches.indexOf(gz[1])];[...hs].forEach((c,j)=>{const v=(hs.length===1?1:hs.length===2?[.7,.3][j]:[.6,.25,.15][j])*(i===1?3:1);w[el(c)]+=v;const t=god(dm,c);g[t]=(g[t]||0)+v})});
- const total=w.reduce((x,y)=>x+y,0), ratio=(w[a]+w[(a+4)%5])/total, strong=ratio>.6, weak=ratio<.4, state=strong?'偏強':weak?'偏弱':'中間區間';
- heading(out,'第五版｜命局分析');note(out,'試驗性扶抑模型：月支藏干權重3，其餘地支1，非日主天干1；藏干按主次分配。未計合化、調候及完整格局，分數不是傳統定論。');
- out.append(node('p','日主 '+dm+'｜支持比例 '+Math.round(ratio*100)+'%｜'+state));
- const fav=weak?[(a+4)%5,a]:strong?[(a+1)%5,(a+2)%5,(a+3)%5]:[];
- out.append(node('p','扶抑候選五行：'+(fav.length?fav.map(i=>names[i]).join('、'):'暫不指定')+'。喜神、用神、忌神仍須核對調候與格局。'));
- const main=hidden[branches.indexOf(p[1][1])][0], mg=god(dm,main), dominant=Object.entries(g).sort((x,y)=>y[1]-x[1])[0][0];
- out.append(node('p','月令本氣：'+main+'（'+mg+'）｜最突出十神：'+dominant));
- const root=p.some(z=>[...hidden[branches.indexOf(z[1])]].some(c=>el(c)===a));
- note(out,'特殊格局初篩：'+(!root&&ratio<.15?'可檢查從弱類格局':ratio>.85?'可檢查專旺或從強類格局':'暫無極端扶抑訊號')+'；不自動判定成格或破格。');
- const traits={'比肩':['自主、堅持','固執、不願妥協'],'劫財':['競爭力、行動力','好勝、容易因利益起爭執'],'食神':['創意、享受生活','安逸、拖延'],'傷官':['表達力、突破框架','挑剔、說話傷人'],'偏財':['靈活、善掌握機會','貪快、容易忽略風險'],'正財':['務實、重視累積','過度計較、害怕變動'],'七殺':['果斷、抗壓','急躁、控制欲強'],'正官':['自律、責任感','拘泥規則、過度在意評價'],'偏印':['獨立思考、洞察','多疑、容易鑽牛角尖'],'正印':['學習力、照顧他人','依賴、逃避決策']};
- const t=traits[dominant];
- function topic(title,basis,body){const box=node('article','');box.append(node('h4',title),node('small','命理依據：'+basis),node('p',body));out.append(box)}
- const wealth=(g['正財']||0)+(g['偏財']||0), peer=(g['比肩']||0)+(g['劫財']||0);
- const spouse=p[2][1], clash='子午 丑未 寅申 卯酉 辰戌 巳亥'.split(' ').find(s=>s.includes(spouse)&&p.some((z,i)=>i!==2&&s.includes(z[1])&&z[1]!==spouse));
- const examples={'比肩':['自己決定做法，不喜歡被指揮','別人提出不同意見時，先聽完再回答','自主負責的工作、專案管理'],'劫財':['看到別人做得好，就想追上對方','不要為了面子答應借錢或合作','業務、競爭型專案、團隊開發'],'食神':['喜歡把事情做得舒服又有趣','把想做的事情拆成每天能完成的小任務','設計、餐飲、內容創作、服務'],'傷官':['很快看出別人做事哪裡不合理','指出問題時也提出可行的解法','企劃、研究、表達與創新工作'],'偏財':['看到新機會就想試試看','先算最壞情況會損失多少','業務、商務開發、資源整合'],'正財':['喜歡知道每筆錢花到哪裡','不要因為怕改變而錯過學習機會','財務、營運、行政與管理'],'七殺':['遇到急事會想立刻處理','先分清楚哪些事情真的需要立刻決定','危機處理、專案執行、管理'],'正官':['答應別人的事情會想辦法做好','不要把別人的評價當成自己的全部價值','制度管理、品質管理、行政'],'偏印':['遇到問題喜歡自己研究','想太久時先做一個小實驗','研究、技術、分析與設計'],'正印':['喜歡先學會再開始，也願意照顧別人','不要每次都等別人替自己決定','教育、支援、研究與培訓']};
- const ex=examples[dominant];
- topic('一、先天命格與五行',dm+'日主、'+mg+'月令','日主就像命盤裡代表自己的角色，月令則像出生時的季節背景。這份試算把幫助日主的力量與其他力量比較，結果落在'+state+'。'+(weak?'在傳統扶抑觀點中，可把它想成做事需要更多支援，而不是能力比較差。':strong?'在傳統扶抑觀點中，可把它想成自身力量較集中，需要適當的出口，而不是一定比別人強。':'目前沒有明顯偏向，不能硬說缺哪一種五行就要補哪一種。')+' 候選五行是'+(fav.map(i=>names[i]).join('、')||'尚未確定')+'，這只是初步模型，不能取代完整格局與季節分析。');
- topic('二、個性、優點與人生盲點',dominant+'突出','以傳統十神的象徵來看，你可以從'+t[0]+'這些特質認識自己。例如，有時可能會'+ex[0]+'。這些做法在適合的場合是優點，但用得太過頭，就可能變成'+t[1]+'。如果身邊的人曾經提醒你類似問題，不要急著反駁，可以想想自己是不是只在意結果，忽略別人的感受。具體練習是：'+ex[1]+'。這是自我檢視的方向，不是對你人格的判決。');
- topic('三、工作與事業',mg+'月令、'+dominant+'突出','可以探索'+ex[2]+'等工作內容，看看是否符合你的興趣與能力。傳統上'+dominant+'象徵的長處是'+t[0]+'，但職場不是只靠個人能力，還需要準時、溝通和合作。如果出現'+t[1]+'的情況，即使工作做得很好，也可能讓同事不願意合作。想換工作時，先列出目前不滿意的原因，再比較新工作的薪水、工時、學習機會和主管風格。創業前先用小規模方式測試市場，不要只因為命盤解讀就辭職。');
- topic('四、財運與理財','財星 '+wealth.toFixed(2)+'、比劫 '+peer.toFixed(2),'賺錢與存錢是兩件事。'+(peer>wealth?'這個模型的比劫權重高於財星，傳統上可用來提醒自己注意競爭、合夥及人情支出。朋友邀你投資時，不要因為不好意思拒絕就答應。':'這個模型的財星權重不低於比劫，可用來反思自己是否把太多心力放在收入與資產上，忽略生活品質。')+' 實際理財可以先記錄一個月的收入與支出，建立緊急預備金，再處理高利率負債。投資股票、基金或房屋前，要看自己能承受多少損失。命盤不能決定投資比例，也不能保證獲利。');
- topic('五、愛情與婚姻','夫妻宮 '+spouse+(clash?'、六沖 '+clash:'、未見原局六沖'),(clash?'夫妻宮在原局出現六沖，傳統命理把它當作關係變動的象徵。可以特別留意生活安排、家庭界線和意見不合時的處理方式。':'原局沒有這項六沖訊號，但不表示婚姻一定幸福，也不表示沒有其他關係壓力。')+' 例如兩個人對花錢的想法不同，與其要求對方完全照自己的方式生活，不如先談好共同支出與各自可使用的金額。冷戰、欺騙、暴力或長期不尊重才是現實中值得重視的警訊。是否離婚、出軌、再婚，以及伴侶的收入，都不能由這些符號確定。');
- topic('六、兄弟姊妹','比劫 '+peer.toFixed(2),(peer>2?'比劫較突出，傳統上可提醒自己留意同輩競爭與比較。':'比劫權重較低，仍不能據此判斷手足是否親近。')+' 家人之間最容易說不清楚的事情，往往是照顧父母、借錢和分配責任。不要因為是家人就認為對方理所當然應該幫忙，也不要把父母的比較當成衡量自己價值的標準。涉及財產時應清楚記錄約定，避免日後各說各話。');
- topic('七、朋友與合作','比劫、'+dominant,'交朋友時，可以觀察自己是否常用'+t[0]+'的方式與人相處，也留意'+t[1]+'是否造成摩擦。真正可靠的朋友不是只在開心時出現，而是能尊重彼此的界線。借錢、合夥或共同購物前先說清楚金額與責任。不要用命盤認定某個朋友是小人，應該看對方實際的行為。');
- topic('八、父母與子女','年柱 '+p[0]+'、月柱 '+p[1]+'、時柱 '+p[3],'傳統上年柱與月柱常用來討論家庭背景，時柱則常作為晚年與子女議題的象徵。這些符號不能告訴我們父母一定如何對待你，也不能算出子女數量。可以想想自己是否把家人的期待當成必須完成的任務，以及未來照顧家人時能否保留自己的生活空間。親子相處時，先聽孩子說完，比急著要求孩子照做更有幫助。');
- topic('九、房屋方位與田宅','扶抑候選五行','民俗五行方位對照為'+(fav.length?fav.map(i=>['東','南','中央','西','北'][i]).join('、'):'暫不指定')+'。這不是經過實地風水勘察的房屋座向結論。看房時先注意採光、通風、噪音、漏水、交通與管理費。想累積多間房屋，要先計算自備款、每月房貸、空置期及修繕費；即使有租金也可能遇到現金流不足。命盤不能算出一生會有幾間房。');
- topic('十、最需要面對的人生弱點',dominant+'的反面象徵','這份報告最值得拿來反思的是'+t[1]+'。如果這些問題確實出現在你的生活裡，可以從一件小事開始改變：'+ex[1]+'。不要把命理當成替錯誤找理由的工具，也不要因為某段解讀不符合自己就勉強相信。');
+// 八字核心開始
+const pillarKeys = ['Year', 'Month', 'Day', 'Time'];
+const labels = ['年柱', '月柱', '日支夫妻宮', '時柱', '大運', '流年', '流月'];
+const branchStems = branch => [...hidden[branches.indexOf(branch)]];
+const parent = element => (element + 4) % 5;
+const roundScore = value => Math.max(0, Math.min(100, Math.round(value)));
 
+const relationRules = [
+  ['天干五合', '甲己:2 乙庚:3 丙辛:4 丁壬:0 戊癸:1', 0],
+  ['六合', '子丑:2 寅亥:0 卯戌:1 辰酉:3 巳申:4 午未:2', 1],
+  ['三合', '申子辰:4 亥卯未:0 寅午戌:1 巳酉丑:3', 1],
+  ['三會', '寅卯辰:0 巳午未:1 申酉戌:3 亥子丑:4', 1],
+  ['六沖', '子午 丑未 寅申 卯酉 辰戌 巳亥', 1],
+  ['刑', '子卯 寅巳申 丑戌未 辰辰 午午 酉酉 亥亥', 1],
+  ['破', '子酉 丑辰 寅亥 卯午 巳申 未戌', 1],
+  ['害', '子未 丑午 寅巳 卯辰 申亥 酉戌', 1]
+];
+
+function relations(pillars) {
+  const hits = [];
+  for (const [kind, rules, column] of relationRules) {
+    for (const rule of rules.split(' ')) {
+      const [symbols, target] = rule.split(':');
+      function match(offset, slots) {
+        if (offset === symbols.length) {
+          hits.push({kind, symbols, slots, target: target === undefined ? null : Number(target)});
+          return;
+        }
+        pillars.forEach((pillar, index) => {
+          if (pillar?.[column] !== symbols[offset] || slots.includes(index)) return;
+          if (symbols[offset] === symbols[offset - 1] && index < slots.at(-1)) return;
+          if (column === 0 && slots.length && index < 4 && slots[0] < 4 && Math.abs(index - slots[0]) !== 1) return;
+          match(offset + 1, [...slots, index]);
+        });
+      }
+      match(0, []);
+    }
+  }
+  const season = el(branchStems(pillars[1][1])[0]);
+  for (const hit of hits.filter(hit => hit.target !== null)) {
+    const stemJoin = hit.kind === '天干五合';
+    const independentStem = pillars.some((pillar, index) => pillar && el(pillar[0]) === hit.target &&
+      (!stemJoin || !hit.slots.includes(index)));
+    const contested = hits.some(other => other !== hit && other.target !== null &&
+      (other.kind === '天干五合') === stemJoin && other.slots.some(index => hit.slots.includes(index)) &&
+      (other.target !== hit.target || other.kind === hit.kind));
+    const clash = hits.some(other => other.kind === '六沖' && other.slots.some(index => hit.slots.includes(index)));
+    const retainsRoot = stemJoin && hit.slots.some(index => el(pillars[index][0]) !== hit.target &&
+      pillars.some((pillar, position) => pillar && position < 4 && branchStems(pillar[1]).includes(pillars[index][0])));
+    const blockers = [
+      season !== hit.target && '化神未得原局月令',
+      !independentStem && '化神未獨立透干',
+      contested && '有爭合或化向衝突',
+      clash && '組合位置受沖',
+      retainsRoot && '參與天干仍有原局本根'
+    ].filter(Boolean);
+    hit.transforms = blockers.length === 0;
+    hit.reason = blockers.join('、') || '化神得月令且透干，未見爭合、沖或本根牽制';
+  }
+  return hits;
 }
 
-document.getElementById('calculate').onclick=()=>{const f=document.getElementById('profile'),out=document.getElementById('chart');out.replaceChildren();if(!f.reportValidity())return;try{const d=Object.fromEntries(new FormData(f));if(d.timezone!=='Asia/Taipei')throw Error('目前試算僅支援台灣標準時間 Asia/Taipei');if(!window.Solar)throw Error('排盤函式庫載入失敗，請重新整理');const [y,m,day]=d.birth_date.split('-').map(Number),[h,min]=d.birth_time.split(':').map(Number);if(y<1902||y>2099)throw Error('測試範圍為1902至2099年');const ec=Solar.fromYmdHms(y,m,day,h,min,0).getLunar().getEightChar();ec.setSect(2);const dm=ec.getDay()[0];const ps=[['時柱','Time'],['日柱','Day'],['月柱','Month'],['年柱','Year']];heading(out,'八字本命盤');const grid=node('div','','pillars'),counts=[0,0,0,0,0];for(const [label,key] of ps){const gz=ec['get'+key](),cell=node('div','','pillar'+(key==='Day'?' day':''));cell.append(node('b',label),node('small',key==='Day'?'日主':god(dm,gz[0])),colored(gz[0]),colored(gz[1]));for(const c of gz)counts[el(c)]++;cell.append(node('small','藏干'));for(const c of hidden[branches.indexOf(gz[1])])cell.append(node('small',c+' · '+god(dm,c),classes[el(c)]));for(const suffix of ['NaYin','DiShi']){const fn=ec['get'+key+suffix];if(typeof fn==='function')cell.append(node('small',fn.call(ec)))}grid.append(cell)}out.append(grid);heading(out,'五行分布');counts.forEach((v,i)=>{out.append(node('div',names[i]+'　'+v+' / 8（'+v/8*100+'%）',classes[i]));const bar=node('div','','bar'),fill=node('i','');fill.style.width=v/8*100+'%';fill.style.background=colors[i];bar.append(fill);out.append(bar)});note(out,'僅計算四柱表面八字，不含藏干及旺衰權重。');heading(out,'日主與月令');out.append(node('p','日主：'+dm+'（'+names[el(dm)]+'）　月支：'+ec.getMonth()[1]));report4(out,ec);heading(out,'地支關係');const zs=ps.map(p=>ec['get'+p[1]]()[1]),rules=[['六合','子丑 寅亥 卯戌 辰酉 巳申 午未'],['六沖','子午 丑未 寅申 卯酉 辰戌 巳亥'],['六害','子未 丑午 寅巳 卯辰 申亥 酉戌'],['刑（兩支提示）','子卯 寅巳 巳申 寅申 丑戌 戌未 丑未 辰辰 午午 酉酉 亥亥']];let hits=[];for(let i=0;i<4;i++)for(let j=i+1;j<4;j++)for(const [name,pairs] of rules)if(pairs.split(' ').some(p=>p===zs[i]+zs[j]||p===zs[j]+zs[i]))hits.push(ps[i][0]+'・'+ps[j][0]+'：'+zs[i]+zs[j]+' '+name);for(const [name,sets] of [['三合','申子辰 亥卯未 寅午戌 巳酉丑'],['三會','寅卯辰 巳午未 申酉戌 亥子丑']])for(const set of sets.split(' '))if([...set].every(c=>zs.includes(c)))hits.push(set+' '+name);out.append(node('p',hits.join('；')||'未見上述完整組合'));note(out,'僅列原局地支組合，不代表必然合化或吉凶。');heading(out,'十年大運');try{const yun=ec.getYun(d.gender==='male'?1:0,2);out.append(node('p',(yun.isForward()?'順行':'逆行')+'｜出生後 '+yun.getStartYear()+' 年 '+yun.getStartMonth()+' 個月 '+yun.getStartDay()+' 天起運'));const luck=yun.getDaYun(10).filter(x=>x.getGanZhi());strip(out,luck.map(x=>[x.getStartYear()+'–'+x.getEndYear(),x.getGanZhi(),x.getStartAge()+'–'+x.getEndAge()+'歲（虛歲）']));}catch(e){note(out,'大運運算失敗：'+e.message)}heading(out,'年度流年');const now=new Date().getFullYear(),items=[];for(let yr=now-2;yr<=now+7;yr++){const gz=Solar.fromYmdHms(yr,7,1,12,0,0).getLunar().getEightChar().getYear();items.push([yr+'年',gz,god(dm,gz[0])])}strip(out,items);heading(out,'逐年流年白話解讀');const trend=[];const trendBox=node('div');out.append(trendBox);for(const [yr,gz,t] of items){
-const a=el(dm), natal=['Year','Month','Day','Time'].map(k=>ec['get'+k]()), w=[0,0,0,0,0];
-natal.forEach((z,i)=>{if(i!==2)w[el(z[0])]++;const hs=hidden[branches.indexOf(z[1])];[...hs].forEach((c,j)=>w[el(c)]+=(hs.length===1?1:hs.length===2?[.7,.3][j]:[.6,.25,.15][j])*(i===1?3:1))});
-const ratio=(w[a]+w[(a+4)%5])/w.reduce((x,y)=>x+y,0), fav=ratio<.4?[a,(a+4)%5]:ratio>.6?[(a+1)%5,(a+2)%5,(a+3)%5]:[];
-const fit=c=>fav.length?(fav.includes(el(c))?1:-1):0;
-let dy='';try{dy=ec.getYun(d.gender==='male'?1:0,2).getDaYun(12).find(x=>x.getStartYear()<=parseInt(yr)&&x.getEndYear()>=parseInt(yr))?.getGanZhi()||''}catch(e){}
-const pairs=(x,y,set)=>set.split(' ').some(z=>z===x+y||z===y+x), clashes=[], joins=[], harms=[];
-for(const [i,z] of [...natal,...(dy?[dy]:[])].entries()){const label=['年柱','月柱','夫妻宮','時柱','大運'][i];if(pairs(gz[1],z[1],'子午 丑未 寅申 卯酉 辰戌 巳亥'))clashes.push(label);if(pairs(gz[1],z[1],'子丑 寅亥 卯戌 辰酉 巳申 午未'))joins.push(label);if(pairs(gz[1],z[1],'子未 丑午 寅巳 卯辰 申亥 酉戌'))harms.push(label)}
-const branchMain=hidden[branches.indexOf(gz[1])][0], bt=god(dm,branchMain), base=65+8*fit(gz[0])+6*fit(branchMain)+(dy?4*fit(dy[0])+3*fit(hidden[branches.indexOf(dy[1])][0]):0)+3*joins.length-5*clashes.length-3*harms.length;
-const advice={比肩:['適合練習獨立負責、建立自己的客源或專業。','同業競爭與共同出資容易消耗資源，先談分帳。','別把堅持變成不肯讓步。'],劫財:['可透過團隊競賽與拓展人脈增加經驗。','留意借貸、人情支出與合夥權責。','不要因比較或面子與伴侶爭輸贏。'],食神:['適合發展作品、服務品質與長期技能。','把創意轉成可持續收入，避免享樂超支。','安排共同興趣，別因安逸忽略承諾。'],傷官:['適合改善流程、提案與展現專業。','新收入模式先小規模驗證，注意合約。','說話太尖銳可能傷害關係，先聽再回應。'],正財:['適合穩定工作流程、累積可量化成果。','盤點固定收入、儲蓄及負債，避免過度節省。','談清楚共同預算，不要只用金錢衡量付出。'],偏財:['適合探索新客群與商務合作。','機會多不等於獲利，避免追高與過度槓桿。','社交增加時仍要保留相處時間。'],正官:['適合爭取明確職責、考核與專業資格。','重視合規與穩定現金流，避免為頭銜增加支出。','討論承諾與生活分工，避免用規則控制對方。'],七殺:['適合處理難題與建立危機應對流程。','壓力下不要倉促借貸或簽約。','遇到衝突先降低語氣，避免強迫對方配合。'],正印:['適合進修、尋找導師與建立支援系統。','教育支出先確認效益，避免過度依賴他人。','接受照顧也要保留自主決策。'],偏印:['適合研究、轉型與培養特殊技能。','避免反覆更換計畫造成沉沒成本。','不要把猜測當成對方的真實想法。']};
-const clamp=n=>Math.max(20,Math.min(95,Math.round(n))), score=clamp(base), box=node('article','','annual-card');if(parseInt(yr)===now)box.classList.add('current-year');box.append(node('h4',yr+' '+gz+'・'+t+(parseInt(yr)===now?'（今年）':'')),node('strong','好運指數 '+score+'%','annual-score'));
-for(const [label,v] of [['事業',base+(['正官','七殺','食神','傷官'].includes(t)?7:0)],['財富',base+(['正財','偏財'].includes(t)?8:['劫財','比肩'].includes(t)?-7:0)],['感情',base+(clashes.includes('夫妻宮')?-12:joins.includes('夫妻宮')?7:0)],['貴人',base+(['正印','偏印'].includes(t)?8:0)],['置產準備',base+(['正財','正印'].includes(t)?5:0)]]){const line=node('div',label+'　'+clamp(v)+' / 100'),bar=node('div','','bar'),fill=node('i','');fill.style.width=clamp(v)+'%';fill.style.background='#C2A56D';bar.append(fill);box.append(line,bar)}
-box.append(node('p','事業：'+advice[t][0]),node('p','財富：'+advice[t][1]),node('p','感情：'+advice[t][2]),node('p','內在課題（地支本氣 '+bt+'）：'+advice[bt][0]),node('p','生活與健康：'+(clashes.length?'變動象徵較多，可預留休息及行程緩衝。':'維持規律作息與運動。')+' 這不是疾病風險預測。'),node('p','命理依據：'+(dy?'大運 '+dy+'；':'未取得適用大運；')+'扶抑候選 '+(fav.map(i=>names[i]).join('、')||'未指定')+'；六合 '+(joins.join('、')||'無')+'；六沖 '+(clashes.join('、')||'無')+'；六害 '+(harms.join('、')||'無')+'。'),node('small','分數為自訂民俗模型：基準65，加減五行扶抑、大運及地支關係權重；非事件機率，未計完整格局、調候及合化。'));
-const blunt={比肩:['太相信自己的方法，容易把別人的提醒當成挑戰。','硬要自己做主，可能讓合作的人失去耐心。','重要決策先找一位敢反對你的人檢查。'],劫財:['容易為了面子或不甘落後而花冤枉錢。','把朋友的成功當成自己的壓力，可能做出不必要的競爭。','拒絕不清楚的借貸與分帳，別用金錢證明交情。'],食神:['享受生活沒有錯，但把舒服當成逃避責任的理由就會拖累進度。','只想做有興趣的事，可能忽略真正需要完成的工作。','先完成必要任務，再安排娛樂預算。'],傷官:['有想法不代表每次都對，說話刻薄也不等於有能力。','急著證明主管或伴侶錯了，可能把原本能解決的事情弄僵。','提出反對意見前，先準備可執行的替代方案。'],正財:['太計較眼前得失，可能錯過長期合作。','只看收入數字而忽略時間成本，容易忙得沒有品質。','每月檢查現金流與實際投入時間。'],偏財:['看到別人賺錢就想跟進，可能把運氣誤認成實力。','同時追太多機會，反而沒有一件做得扎實。','先訂可承受損失上限，不因命理分數投資。'],正官:['過度在乎頭銜和評價，可能不敢承認自己做不到。','把規矩當成控制別人的工具，容易讓關係變得僵硬。','把責任範圍與拒絕條件事先講清楚。'],七殺:['壓力一大就想立刻解決，容易把急躁誤認成效率。','對自己和別人要求過高，可能讓團隊不敢說實話。','重大決定隔夜再確認，先核對最壞情境。'],正印:['一直等別人肯定才行動，可能錯失練習獨立的機會。','學了很多卻沒有落實，知識也不會自動變成成果。','每次進修都安排一項可驗收的實作。'],偏印:['想太多又不願驗證，容易把猜測當成事實。','反覆推翻自己的計畫，可能浪費時間和資源。','設定決策期限，先做小規模測試。']};
-trend.push([parseInt(yr),score]);
-const eventScores=[['升職加薪',base+(['正官','七殺'].includes(t)?12:0)],['創業發展',base+(['食神','傷官','偏財'].includes(t)?10:0)],['正財收入',base+(t==='正財'?12:0)],['偏財機會',base+(t==='偏財'?12:0)],['感情發展',base+(joins.includes('夫妻宮')?12:0)-(clashes.includes('夫妻宮')?15:0)],['貴人助力',base+(['正印','偏印'].includes(t)?12:0)],['置產準備',base+(t==='正財'?8:0)],['財務損耗警示',100-base+(['劫財','偏財'].includes(t)?15:0)],['感情摩擦警示',100-base+(clashes.includes('夫妻宮')?20:0)],['合作摩擦警示',100-base+harms.length*6+(['比肩','劫財','傷官'].includes(t)?10:0)]];
-box.append(node('h4','年度事件傾向（非機率）'));for(const [label,v] of eventScores){const bar=node('div','','bar'),fill=node('i');fill.style.width=clamp(v)+'%';fill.style.background=label.includes('警示')?'#B65C55':'#C2A56D';bar.append(fill);box.append(node('div',label+' '+clamp(v)+'%'),bar)}
-box.append(node('h4','今年最容易吃虧的地方'),node('p','天干'+t+'：'+blunt[t][0]),node('p','地支本氣'+bt+'：'+blunt[bt][1]),node('p',clashes.length?'六沖涉及'+clashes.join('、')+'，不要把一時不滿當成必須立刻改變的理由。':'未見六沖也不代表可以掉以輕心，尤其不要把順利當成自己永遠正確的證明。'),node('p',harms.length?'六害涉及'+harms.join('、')+'，合作條件若只靠口頭默契，日後容易各說各話。':'即使沒有六害訊號，也應以實際合約與對方行為判斷合作。'),node('h4','今年最該改掉的習慣'),node('p',blunt[t][2]),node('p',blunt[bt][2]),node('p',score<60?'模型評分偏低：先處理既有問題，避免為了證明自己而同時承擔多項新責任。':'模型評分較佳也不是免責牌：別因為有利評分就忽略成本、承諾或現實限制。'),node('small','以上為十神與地支象徵衍生的反思提示；事件分數採自訂加權，未經統計驗證。'));
-out.append(box);
-}const svgNS='http://www.w3.org/2000/svg',svg=document.createElementNS(svgNS,'svg');svg.setAttribute('viewBox','0 0 340 150');svg.style.width='100%';const add=(tag,attrs,txt)=>{const e=document.createElementNS(svgNS,tag);for(const [k,v] of Object.entries(attrs))e.setAttribute(k,v);if(txt)e.textContent=txt;svg.append(e)};for(const v of [0,50,100]){const y=120-v;add('line',{x1:25,y1:y,x2:325,y2:y,stroke:'#ddd'});add('text',{x:0,y:y+4,'font-size':9,fill:'#795039'},v+'%')}const pts=trend.map(([yr,v],i)=>[30+i*32,120-v]);add('polyline',{points:pts.map(p=>p.join(',')).join(' '),fill:'none',stroke:'#C2A56D','stroke-width':2});pts.forEach(([x,y],i)=>{add('circle',{cx:x,cy:y,r:3,fill:'#795039'});add('text',{x,y:y-7,'font-size':9,'text-anchor':'middle',fill:'#795039'},trend[i][1]+'%');add('text',{x,y:138,'font-size':9,'text-anchor':'middle',fill:'#795039'},String(trend[i][0]))});trendBox.append(node('h4','十年好運指數走勢'),svg,node('small','自訂命理評分，非真實事件機率。'));note(out,'流年以立春分界；大運採節氣時間換算（函式庫 sect 2）。');note(out,'採台灣標準時間，晚子時日柱採當日，不校正真太陽時或歷史夏令時間。命理為傳統文化參考，排盤與大運仍待交叉驗證。');}catch(e){out.append(node('p','排盤失敗：'+e.message))}};
+function describe(hit) {
+  return hit.symbols + hit.kind + '（' + hit.slots.map(index => labels[index]).join('、') + '）' +
+    (hit.target === null ? '' : '，' + (hit.transforms ? '本模型判化' + names[hit.target] : '合而未化') + '：' + hit.reason);
+}
+
+// 冷熱及乾濕以月支為起點，再由原局火、水、燥土、濕土修正。
+// 數值是本站公開的規則權重，並非曆法資料或古籍原文。
+const seasonalClimate = [
+  [-3, -2], [-3, -2], [-2, -1], [-1, -1], [0, -2], [2, 1],
+  [3, 2], [2, 3], [1, 1], [0, 2], [-1, 3], [-3, -2]
+];
+
+function natalModel(pillars) {
+  const day = pillars[2][0];
+  const self = el(day);
+  const weights = Array(5).fill(0);
+  const gods = {};
+  const roots = [];
+  const visible = pillars.map(pillar => pillar[0]);
+  const monthStems = branchStems(pillars[1][1]);
+  const hits = relations(pillars);
+  function add(stem, weight, element = el(stem)) {
+    weights[element] += weight;
+    gods[god(day, stem)] = (gods[god(day, stem)] || 0) + weight;
+  }
+  pillars.forEach(([stem, branch], index) => {
+    const stemChange = hits.find(hit => hit.transforms && hit.kind === '天干五合' && hit.slots.includes(index));
+    const branchChange = hits.find(hit => hit.transforms && hit.kind !== '天干五合' && hit.slots.includes(index));
+    if (index !== 2) add(stem, 1, stemChange?.target);
+    branchStems(branch).forEach((hiddenStem, rank, all) => {
+      const fractions = [[1], [.7, .3], [.6, .25, .15]][all.length - 1];
+      add(hiddenStem, fractions[rank] * (index === 1 ? 3 : 1), branchChange?.target);
+      if (el(hiddenStem) === self) roots.push(labels[index] + hiddenStem + (rank === 0 ? '本氣' : '餘氣'));
+    });
+  });
+  const support = (weights[self] + weights[parent(self)]) / 9;
+  const monthElement = el(monthStems[0]);
+  const command = [self, parent(self)].includes(monthElement);
+  const allies = visible.filter((stem, index) => index !== 2 && [self, parent(self)].includes(el(stem))).length;
+  const dominant = weights.indexOf(Math.max(...weights));
+  const state = support >= .59 ? '身強' : support <= .41 ? '身弱' : '中和';
+  const exposed = monthStems.filter(stem => visible.some((item, index) => index !== 2 && item === stem));
+  const lead = exposed[0] || monthStems[0];
+  const ordinary = {'比肩':'比劫月令', '劫財':'比劫月令'}[god(day, lead)] || god(day, lead) + '格候選';
+  const special = !roots.length && !allies && support <= .12 && weights[dominant] >= 4.5
+    ? ({1:'從兒', 2:'從財', 3:'從殺'}[(dominant - self + 5) % 5] || '')
+    : command && roots.length >= 3 && support >= .88 && dominant === self && weights[self] >= 6
+      ? ['曲直', '炎上', '稼穡', '從革', '潤下'][self] + '專旺' : '';
+  const [monthHeat, monthDryness] = seasonalClimate[branches.indexOf(pillars[1][1])];
+  const heat = monthHeat + .38 * (weights[1] - weights[4]);
+  const drySoil = pillars.filter(pillar => '未戌'.includes(pillar[1])).length;
+  const wetSoil = pillars.filter(pillar => '丑辰'.includes(pillar[1])).length;
+  const dryness = monthDryness + .25 * (weights[1] - weights[4]) + .45 * (drySoil - wetSoil);
+  const climate = Array(5).fill(0);
+  if (heat <= -1.4) climate[1] += 1.8;
+  if (heat >= 1.4) climate[4] += 1.8;
+  if (dryness >= 1.4) climate[4] += 1.1;
+  if (dryness <= -1.4) climate[1] += 1.1;
+  const balance = state === '身弱' ? [parent(self), self] :
+    state === '身強' ? [(self + 1) % 5, (self + 2) % 5, (self + 3) % 5] : [];
+  const balanceScore = weights.map((weight, element) => {
+    if (special.includes('專旺')) return element === self ? 3 : element === parent(self) ? 1.8 : -1.6;
+    if (special) return element === dominant ? 3 : element === parent(dominant) ? 1.5 : -1.7;
+    return balance.includes(element) ? 2 - balance.indexOf(element) * .25 :
+      balance.length ? -1.6 : (1.8 - weight) * .4;
+  });
+  const preference = balanceScore.map((value, index) => value + climate[index]);
+  const priority = [...preference.keys()].sort((a, b) => preference[b] - preference[a]);
+  return {pillars, day, weights, gods, roots, command, allies, state, support, monthStems, exposed,
+    special, ordinary, heat, dryness, climate, balanceScore, preference, priority, hits};
+}
+
+function chartModel(birth, gender) {
+  const ec = birth.getLunar().getEightChar();
+  ec.setSect(2);
+  const model = natalModel(pillarKeys.map(key => ec['get' + key]()));
+  const yun = ec.getYun(gender === 'male' ? 1 : 0, 2);
+  const start = yun.getStartSolar();
+  const periods = yun.getDaYun(23).slice(1).map((period, index) => ({
+    pillar: period.getGanZhi(), start: start.nextYear(index * 10), end: start.nextYear((index + 1) * 10)
+  }));
+  return {...model, birth, gender, periods, forward: yun.isForward(), start};
+}
+
+const keyOf = solar => solar.toYmdHms();
+const activeLuck = (model, solar) => model.periods.find(period =>
+  keyOf(period.start) <= keyOf(solar) && keyOf(solar) < keyOf(period.end));
+
+const jieNames = ['立春','驚蟄','清明','立夏','芒種','小暑','立秋','白露','寒露','立冬','大雪','小寒'];
+const lunarJie = ['立春','惊蛰','清明','立夏','芒种','小暑','立秋','白露','寒露','立冬','大雪','小寒'];
+const solarTermsCache = new Map();
+function solarTerms(year) {
+  if (!solarTermsCache.has(year)) {
+    const table = Solar.fromYmdHms(year, 7, 1, 12, 0, 0).getLunar().getJieQiTable();
+    const next = Solar.fromYmdHms(year + 1, 7, 1, 12, 0, 0).getLunar().getJieQiTable();
+    solarTermsCache.set(year, [...lunarJie.map((term, index) => (index === 11 ? next : table)[term]), next['立春']]);
+  }
+  return solarTermsCache.get(year);
+}
+
+function slices(model, start, end) {
+  if (keyOf(end) <= keyOf(model.birth)) return [];
+  const first = keyOf(start) < keyOf(model.birth) ? model.birth : start;
+  const boundaries = [first, ...model.periods.map(period => period.start)
+    .filter(solar => keyOf(first) < keyOf(solar) && keyOf(solar) < keyOf(end)), end];
+  return boundaries.slice(0, -1).map((solar, index) => ({start: solar, end: boundaries[index + 1]}));
+}
+
+const pressure = {'六沖': 5, '刑': 3, '害': 2.5, '破': 2};
+const tenGods = ['比肩','劫財','食神','傷官','偏財','正財','七殺','正官','偏印','正印'];
+const starSignal = {
+  比肩: ['獨立接案', '拒絕讓別人參與決策', '讓合作方在簽約前檢查分工'],
+  劫財: ['共同開發客源', '為了人情先代墊或承諾分潤', '先用書面確認分潤和退場條件'],
+  食神: ['把一項做得好的服務做成可重複交付的產品', '花太久打磨細節而延後交付', '先約定可驗收的交付日期'],
+  傷官: ['提案改善現有流程', '當眾指出別人失誤卻沒有替案', '私下拿實例和替代方案談變更'],
+  偏財: ['用小規模試單開發新客群', '把未到帳的承諾算進支出預算', '先訂試單成本上限和收款日'],
+  正財: ['整理可持續的收入和續約條件', '為了維持熟悉的收入接受不划算的工時', '把收入、工時和額外支出放在同一張表'],
+  七殺: ['接下一項界線清楚的難案', '在期限壓力下答應超出權限的條件', '先確認決策權、支援人力和交付範圍'],
+  正官: ['用成果爭取明確職責或考核機會', '先接責任再談資源和授權', '在接任前寫下權責和評估標準'],
+  偏印: ['用專門技能完成小型驗證', '一直改做法卻遲遲不交付', '設定一個驗證期限與停止條件'],
+  正印: ['帶著具體難題向專業人士請教', '等所有人同意才開始', '約定討論後當週要完成的一項行動']
+};
+
+const domains = [
+  ['事業','正官 七殺 傷官 食神',[1,3], '用一件可驗收的成果談職責'],
+  ['財富','正財 偏財',[1,2], '把已收款、應收款及固定支出分開記'],
+  ['正財','正財 正官',[1,2], '談清楚續約、底薪或固定佣金的條件'],
+  ['偏財','偏財 食神 傷官',[1,2], '先用可負擔損失的小額試單驗證需求'],
+  ['感情','正財 正官 食神',[2], '先談兩人共同時間、花費和家人界線'],
+  ['創業','食神 傷官 偏財 劫財',[1,3], '先完成一輪有實際收款的小規模驗證'],
+  ['升遷','正官 七殺 正印',[1], '整理可量化成果後再談權限和資源'],
+  ['貴人','正印 偏印 正官',[0,1], '帶一個具體問題找有實務經驗的人討論'],
+  ['置產','正財 正印',[2,3], '先列自備款、持有費和收入下降時的緩衝'],
+  ['負債','正財 七殺 劫財',[2,3], '逐筆列月付、利率和還款日再考慮新承諾'],
+  ['個性與弱點','比肩 劫財 傷官 偏印',[2], '重大決策前請一位敢提出異議的人檢查'],
+  ['天賦','食神 傷官 偏印',[1,3], '挑一項有回饋的技能持續做出作品'],
+  ['婚姻與伴侶','正官 七殺 正財 偏財',[2], '觀察對方能否守約並願意協商分工'],
+  ['家庭','正印 偏印 正財',[0,1,2], '分清照顧責任、可支配時間與費用'],
+  ['子女與教養','食神 傷官 正官',[3], '先問清楚孩子卡在哪裡，再定可以做到的要求'],
+  ['人際與合作','比肩 劫財 傷官',[0,1], '用書面約定合作界線、收款與退場']
+];
+
+function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
+  const luck = activeLuck(model, solar)?.pillar;
+  const year = yearAnchor.getLunar().getEightChar().getYear();
+  const month = monthly ? solar.getLunar().getEightChar().getMonth() : null;
+  const pillars = [...model.pillars, luck, year, month];
+  const hits = relations(pillars).filter(hit => hit.slots.some(index => index >= 4));
+  const stars = Object.fromEntries(tenGods.map(star => [star, (model.gods[star] || 0) * .55]));
+  const movement = Array(5).fill(0);
+  const multipliers = [1.3, 1, .64];
+  for (let index = 4; index < pillars.length; index++) {
+    if (!pillars[index]) continue;
+    const [stem, branch] = pillars[index];
+    const stemChange = hits.find(hit => hit.transforms && hit.kind === '天干五合' && hit.slots.includes(index));
+    const branchChange = hits.find(hit => hit.transforms && hit.kind !== '天干五合' && hit.slots.includes(index));
+    for (const [letter, intensity, change] of [[stem, 1, stemChange], [branchStems(branch)[0], .8, branchChange]]) {
+      const element = change?.target ?? el(letter);
+      movement[element] += intensity * multipliers[index - 4];
+      stars[god(model.day, letter)] += intensity * multipliers[index - 4];
+    }
+  }
+  const fit = movement.reduce((sum, weight, element) => sum + weight * model.preference[element], 0);
+  const tension = hits.reduce((sum, hit) => sum + (pressure[hit.kind] || 0), 0);
+  const base = 62 + fit * 2.7 - tension * .85;
+  const scores = domains.map(([label, targets, houses, action]) => {
+    const partner = model.gender === 'male' ? ['正財', '偏財'] : ['正官', '七殺'];
+    const candidates = (label === '婚姻與伴侶' ? partner : targets.split(' '))
+      .sort((a, b) => stars[b] - stars[a]);
+    const star = candidates[0];
+    const ties = hits.filter(hit => hit.slots.some(index => houses.includes(index)));
+    const friction = ties.reduce((sum, hit) => sum + (pressure[hit.kind] || 0), 0);
+    const benefit = ties.reduce((sum, hit) => sum + (hit.transforms ? model.preference[hit.target] * 1.7 : 0), 0);
+    const score = roundScore(base + (stars[star] - 1.6) * 4 + benefit - friction * 1.35);
+    const [opportunity, mistake, correction] = starSignal[star];
+    const mainTie = [...ties].sort((a, b) => (pressure[b.kind] || 0) - (pressure[a.kind] || 0))[0];
+    const context = mainTie ? describe(mainTie) : fit >= 0 ? '運歲五行整體承接喜用' : '運歲五行加重原局偏向';
+    const warning = friction >= 4 ? '先處理' + context + '牽動的分工或承諾。' : '';
+    let advice = fit < 0 || friction >= 4
+      ? warning + '最容易吃虧的是' + mistake + '。先' + action + '。'
+      : '可以先' + opportunity + '。也要防' + mistake + '，具體做法是' + correction + '。';
+    if (label === '婚姻與伴侶') {
+      const traits = {正財:'收支有規律、願意一起負擔日常開銷', 偏財:'善於拓展人脈、工作安排彈性大',
+        正官:'守約、重視承諾與生活秩序', 七殺:'行動快、遇到壓力會主動做決定'};
+      advice += ' 依傳統配偶星象徵，優先觀察對方是否' + traits[star] +
+        '。' + (friction > 0 ? '尤其要確認兩人對工作時間與家庭角色能否談出共識。' : '');
+    }
+    if (label === '人際與合作' && friction > 0) {
+      advice += ' 合作警訊是對方反覆改口、推遲付款或要求你先承擔責任。';
+    }
+    const basis = (luck ? luck + '大運' : '尚未起運') + '、' + year + '流年' +
+      (month ? '、' + month + '流月' : '') + '，原局' + model.state + '／' +
+      (model.special || model.ordinary) + '，' + star + '權重由原局 ' +
+      ((model.gods[star] || 0) * .55).toFixed(2) + ' 加到 ' + stars[star].toFixed(2) +
+      '，大運干／支本氣為' + (luck ? god(model.day, luck[0]) + '／' + god(model.day, branchStems(luck[1])[0]) : '未起運') +
+      '，流年干／支本氣為' + god(model.day, year[0]) + '／' + god(model.day, branchStems(year[1])[0]) +
+      '。' + context;
+    return {label, star, score, advice, basis, opportunity, mistake, correction, friction};
+  });
+  const find = label => scores.find(score => score.label === label);
+  const risks = [
+    ['破財警示', roundScore(85 - find('財富').score + stars.劫財 * 4 + find('負債').friction)],
+    ['人際衝突警示', roundScore(80 - find('人際與合作').score + stars.傷官 * 4 + find('人際與合作').friction)],
+    ['感情摩擦警示', roundScore(85 - find('感情').score + find('感情').friction * 2)]
+  ];
+  return {luck, year, month, hits, fit, movement, overall: roundScore(base), scores, risks};
+}
+// 八字核心結束
+
+function taipeiNow() {
+  const formatter = new Intl.DateTimeFormat('sv-SE', {
+    timeZone: 'Asia/Taipei', year:'numeric', month:'2-digit', day:'2-digit',
+    hour:'2-digit', minute:'2-digit', second:'2-digit', hourCycle:'h23'
+  });
+  return Solar.fromYmdHms(...formatter.format(new Date()).match(/\d+/g).map(Number));
+}
+
+function article(parent, title, body, basis) {
+  const box = node('article', '');
+  box.append(node('h4', title), node('p', body));
+  if (basis) box.append(node('small', '命理依據｜' + basis));
+  parent.append(box);
+}
+
+function graph(parent, points) {
+  if (!points.length) return;
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('viewBox', '0 0 640 185');
+  svg.setAttribute('role', 'img');
+  svg.setAttribute('aria-label', points.map(([year, score]) => year + '年 ' + score + '分').join('，'));
+  function mark(tag, attributes, content) {
+    const item = document.createElementNS(svg.namespaceURI, tag);
+    for (const [key, value] of Object.entries(attributes)) item.setAttribute(key, value);
+    item.textContent = content || '';
+    svg.append(item);
+  }
+  for (const score of [0, 50, 100]) {
+    const y = 145 - score * 1.15;
+    mark('line', {x1:39, x2:620, y1:y, y2:y, stroke:'#e7dacb'});
+    mark('text', {x:2, y:y + 4, fill:'#795039', 'font-size':14}, score + '%');
+  }
+  const positions = points.map(([, score], index) => [52 + index * 55, 145 - score * 1.15]);
+  mark('polyline', {points:positions.map(point => point.join(',')).join(' '), fill:'none', stroke:'#A38549', 'stroke-width':3});
+  positions.forEach(([x, y], index) => {
+    mark('circle', {cx:x, cy:y, r:4, fill:'#795039'});
+    mark('text', {x, y:y-8, 'text-anchor':'middle', fill:'#795039', 'font-size':14}, points[index][1] + '%');
+    mark('text', {x, y:169, 'text-anchor':'middle', fill:'#795039', 'font-size':14}, points[index][0]);
+  });
+  const scroller = node('div', '', 'trend');
+  scroller.append(svg);
+  parent.append(scroller);
+}
+
+function renderNatal(out, model) {
+  heading(out, '八字本命盤');
+  const grid = node('div', '', 'pillars');
+  [...model.pillars].reverse().forEach(([stem, branch], index) => {
+    const cell = node('div', '', 'pillar' + (index === 1 ? ' day' : ''));
+    cell.append(node('b', ['時柱','日柱','月柱','年柱'][index]));
+    cell.append(node('small', index === 1 ? '日主' : god(model.day, stem)), colored(stem), colored(branch));
+    for (const letter of branchStems(branch)) {
+      cell.append(node('small', letter + ' · ' + god(model.day, letter), classes[el(letter)]));
+    }
+    grid.append(cell);
+  });
+  out.append(grid);
+  const namesOf = elements => elements.map(element => names[element]).join('、') || '無明顯偏向';
+  const [primary, secondary] = model.priority;
+  const unwanted = model.priority.filter(element => model.preference[element] < -.45);
+  const balance = [...model.balanceScore.keys()].sort((a,b) => model.balanceScore[b] - model.balanceScore[a]);
+  article(out, model.day + '日主 · ' + model.state,
+    '扶助比重 ' + Math.round(model.support * 100) + '%。' + (model.command ? '得令' : '失令') +
+    '，同類藏干通根 ' + (model.roots.join('、') || '無') + '，干上印比 ' + model.allies + ' 位。' +
+    '五行權重 ' + model.weights.map((weight, index) => names[index] + weight.toFixed(2)).join('、') + '。',
+    '月令 ' + model.pillars[1][1] + '，藏干 ' + model.monthStems.join('、') +
+    '，月令藏干透出 ' + (model.exposed.join('、') || '無'));
+  article(out, '調候、格局與用神',
+    '原局' + (model.heat < -1.4 ? '偏寒' : model.heat > 1.4 ? '偏熱' : '寒暖中間') + '、' +
+    (model.dryness < -1.4 ? '偏濕' : model.dryness > 1.4 ? '偏燥' : '燥濕中間') +
+    '。扶抑候選 ' + (model.state === '中和' && !model.special ? '無明顯偏向' : namesOf(balance.slice(0, 2))) +
+    '，調候候選 ' + namesOf(model.climate.map((value,index) => value > 0 ? index : -1).filter(index => index >= 0)) +
+    '。綜合用神候選 ' + names[primary] + '，次喜 ' + names[secondary] + '，忌神候選 ' + namesOf(unwanted) + '。',
+    (model.special ? model.special + '候選（根氣、透干及集中度門檻）' : model.ordinary + '（月令透干優先）') +
+    '，寒熱值 ' + model.heat.toFixed(2) + '，燥濕值 ' + model.dryness.toFixed(2) +
+    '。調候採月令與原局火水、燥濕土加權。');
+  heading(out, '原局刑沖合化');
+  const list = node('ul', '');
+  for (const hit of model.hits) list.append(node('li', describe(hit)));
+  out.append(model.hits.length ? list : node('p', '此模型未檢出原局完整組合。'));
+}
+
+function renderDirections(out, model, current) {
+  const directions = ['東','南','東北或西南','西','北'];
+  const order = [...model.priority];
+  const timed = order.map(element => {
+    const fit = model.preference[element];
+    const seasonalPressure = current.movement[element];
+    return {element, score: fit + (fit < 0 ? -seasonalPressure : Math.min(1.4, seasonalPressure))};
+  }).sort((a,b) => b.score - a.score);
+  const explain = element => directions[element] + '（' + names[element] +
+    '，扶抑與格局 ' + model.balanceScore[element].toFixed(1) + '，調候 ' + model.climate[element].toFixed(1) + '）';
+  heading(out, '房屋方位');
+  article(out, '長期居住',
+    '首選 ' + explain(order[0]) + '，次選 ' + explain(order[1]) + '，相對不建議 ' + explain(order.at(-1)) + '。',
+    model.state + '、' + (model.special || model.ordinary) + '，以原局用神合併調候排序。');
+  article(out, '階段性選擇',
+    '首選 ' + explain(timed[0].element) + '，次選 ' + explain(timed[1].element) +
+    '，相對不建議 ' + explain(timed.at(-1).element) + '。',
+    (current.luck || '未起運') + '大運與' + current.year + '年使' +
+    names[current.movement.indexOf(Math.max(...current.movement))] +
+    '的作用最集中。運歲對喜用作加強，對忌神累積作扣分。');
+  note(out, '此處是八字五行的方位參考。實際看屋仍需核對門向、採光、通風和現場格局。');
+}
+
+function renderAnnual(out, model, year, isCurrent) {
+  const terms = solarTerms(year);
+  const intervals = slices(model, terms[0], terms[12]);
+  if (!intervals.length) return;
+  const box = node('details', '', 'annual-card' + (isCurrent ? ' current-year' : ''));
+  box.open = isCurrent;
+  const phases = intervals.map(interval => ({...interval, result: reading(model, interval.start, {yearAnchor:terms[0]})}));
+  box.append(node('summary', year + '年 ' + phases[0].result.year + '｜整體好運 ' +
+    phases.map(phase => phase.result.overall + '%').join(' → ') + (isCurrent ? ' · 當年度' : '')));
+  for (const phase of phases) {
+    const result = phase.result;
+    heading(box, keyOf(phase.start) + ' 起 · ' + (result.luck ? result.luck + '大運' : '未起運'));
+    const metrics = node('dl', '', 'metrics');
+    for (const score of result.scores.slice(0, 9)) {
+      metrics.append(node('dt', score.label), node('dd', score.score + '%'));
+    }
+    for (const [label, score] of result.risks) metrics.append(node('dt', label), node('dd', score + '%'));
+    box.append(metrics);
+    const tracked = result.scores.slice(0, 9);
+    const ranked = [...tracked].sort((a,b) => b.score - a.score);
+    const best = ranked[0];
+    const worst = ranked.at(-1);
+    const nextRisk = ranked.at(-2);
+    article(box, '最值得把握 · ' + best.label, '可以先' + best.opportunity + '。' + best.advice, best.basis);
+    article(box, '最容易犯的錯 · ' + worst.label, worst.advice, worst.basis);
+    article(box, '最不適合 · ' + nextRisk.label, '避免' + nextRisk.mistake + '。' + nextRisk.correction + '。', nextRisk.basis);
+  }
+  const monthly = node('details', '');
+  monthly.append(node('summary', '十二節氣月'));
+  function renderMonths() {
+    if (monthly.dataset.rendered) return;
+    monthly.dataset.rendered = 'true';
+    for (let index = 0; index < 12; index++) {
+      for (const part of slices(model, terms[index], terms[index + 1])) {
+        const result = reading(model, part.start, {monthly:true, yearAnchor:terms[0]});
+        const ranked = result.scores.slice(0, 9).sort((a,b) => b.score - a.score);
+        const top = ranked[0];
+        const low = ranked.at(-1);
+        article(monthly, jieNames[index] + ' · ' + result.month + ' · ' + result.overall + '%',
+          keyOf(part.start) + ' 起。' + top.label + '：' + top.advice + ' ' + low.label + '：' + low.advice,
+          top.basis + '；' + low.basis);
+      }
+    }
+  }
+  monthly.addEventListener('toggle', () => {
+    if (monthly.open) renderMonths();
+  });
+  monthly.addEventListener('render-months', renderMonths);
+  box.append(monthly);
+  out.append(box);
+  const duration = (start, end) => Date.parse(keyOf(end).replace(' ', 'T') + '+08:00') -
+    Date.parse(keyOf(start).replace(' ', 'T') + '+08:00');
+  const total = phases.reduce((sum, phase) => sum + duration(phase.start, phase.end), 0);
+  return [year, Math.round(phases.reduce((sum, phase) => sum + phase.result.overall *
+    duration(phase.start, phase.end), 0) / total)];
+}
+
+function renderReport(out, model, now) {
+  renderNatal(out, model);
+  heading(out, '十年大運');
+  const currentPeriod = activeLuck(model, now);
+  note(out, (model.forward ? '順行' : '逆行') + '｜首交運 ' + keyOf(model.start) +
+    '｜採 lunar-javascript 第 2 法的節氣分鐘換算。');
+  const luckList = node('div', '', 'luck-list');
+  const index = currentPeriod ? model.periods.indexOf(currentPeriod) : 0;
+  const startIndex = Math.max(0, index - 2);
+  for (const period of model.periods.slice(startIndex, startIndex + 10)) {
+    const card = node('div', '', 'pillar' + (period === currentPeriod ? ' current-year' : ''));
+    card.append(node('b', period === currentPeriod ? '目前大運' : keyOf(period.start).slice(0, 4) + ' 起'),
+      colored(period.pillar[0]), colored(period.pillar[1]),
+      node('small', keyOf(period.start) + ' 起'), node('small', keyOf(period.end) + ' 交下運'));
+    luckList.append(card);
+  }
+  out.append(luckList);
+  if (keyOf(now) < keyOf(model.birth)) note(out, '目前日期早於出生，個人化主題以出生時點試算。');
+  const current = reading(model, keyOf(now) < keyOf(model.birth) ? model.birth : now);
+  heading(out, '個人主題 · ' + current.year + '流年 × ' + (current.luck ? current.luck + '大運' : '未起運'));
+  for (const item of current.scores) article(out, item.label, item.advice, item.basis);
+  renderDirections(out, model, current);
+  heading(out, '年度好運指數走勢');
+  note(out, '百分比是自訂命理傾向評分。交運年分段解讀，折線按各段時長取平均。');
+  const plot = node('div', '');
+  out.append(plot);
+  const year = now.getYear() - (keyOf(now) < keyOf(solarTerms(now.getYear())[0]) ? 1 : 0);
+  const firstYear = Math.max(year - 2, model.birth.getYear() -
+    (keyOf(model.birth) < keyOf(solarTerms(model.birth.getYear())[0]) ? 1 : 0));
+  const points = [];
+  for (let y = firstYear; y < firstYear + 10; y++) {
+    const point = renderAnnual(out, model, y, y === year);
+    if (point) points.push(point);
+  }
+  graph(plot, points);
+  note(out, '使用台灣標準時間 UTC+8。晚子時日柱採當日，未校正歷史夏令時間、真太陽時。格局、合化與調候依本站規則示範。');
+  const print = node('button', '列印／儲存 PDF');
+  print.type = 'button';
+  print.onclick = () => {
+    const sections = [...out.querySelectorAll('details')];
+    const collapsed = sections.filter(section => !section.open);
+    for (const section of sections) {
+      section.open = true;
+      section.dispatchEvent(new Event('render-months'));
+    }
+    try {
+      window.print();
+    } finally {
+      for (const section of collapsed) section.open = false;
+    }
+  };
+  out.append(print);
+}
+
+document.getElementById('calculate').onclick = () => {
+  const form = document.getElementById('profile');
+  const out = document.getElementById('chart');
+  if (!form.reportValidity()) return;
+  out.replaceChildren();
+  try {
+    const data = Object.fromEntries(new FormData(form));
+    if (data.timezone !== 'Asia/Taipei') throw Error('目前試算僅支援 Asia/Taipei');
+    if (!window.Solar) throw Error('排盤函式庫載入失敗，請重新整理');
+    const [year, month, day] = data.birth_date.split('-').map(Number);
+    const [hour, minute, second = 0] = data.birth_time.split(':').map(Number);
+    if (year < 1902 || year > 2099) throw Error('測試範圍為 1902 至 2099 年');
+    const birth = Solar.fromYmdHms(year, month, day, hour, minute, second);
+    renderReport(out, chartModel(birth, data.gender), taipeiNow());
+  } catch (error) {
+    out.replaceChildren(node('p', '排盤失敗：' + error.message));
+  }
+};
 </script><script type="module">
 import {createClient} from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
 const db=createClient('https://zqnjytqhwzjybjhvrxvo.supabase.co','sb_publishable_yZs9f2JUumaOE5TfCFsQrw_U4vcuEzu',{auth:{persistSession:false}});const $=id=>document.getElementById(id);const msg=(id,s)=>$(id).textContent=s;
