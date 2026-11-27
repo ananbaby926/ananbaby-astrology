@@ -353,13 +353,13 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.locator('#profile [name=birth_time]').fill('08:00:00');
     await page.locator('[name=birth_place]').fill('虛構城');
     await page.locator('#calculate').click();
-    await page.getByText('八字本命盤').waitFor();
-    await page.getByRole('heading', {name:'紫微斗數 · 十二宮'}).waitFor();
+    await page.getByText('先聊聊你自己').waitFor();
+    await page.getByRole('heading', {name:'你在關係裡看重的事'}).waitFor();
     await page.locator('#chart').getByText(/請填寫甲方出生地經緯度/).waitFor();
-    assert.equal(await page.getByRole('heading', {name:'西洋占星 · 本命盤'}).count(), 0);
+    assert.equal(await page.getByRole('heading', {name:'你習慣怎麼表達在乎'}).count(), 0);
     await page.locator('#entry [data-taipei]').click();
     await page.locator('#calculate').click();
-    await page.getByRole('heading', {name:'西洋占星 · 本命盤'}).waitFor();
+    await page.getByRole('heading', {name:'你習慣怎麼表達在乎'}).waitFor();
     await page.getByRole('heading', {name:'三大命理綜合報告'}).waitFor();
     const second = page.locator('#pair-form');
     await second.locator('[name=birth_date]').fill('2000-01-01');
@@ -368,8 +368,8 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.locator('#pair-chart').getByText(/請填寫乙方出生地經緯度/).waitFor();
     await second.locator('[data-taipei]').click();
     await second.getByRole('button', {name:'計算雙人合盤'}).click();
-    await page.locator('#pair-chart').getByRole('heading', {name:'西洋 · 雙盤行星相位'}).waitFor();
-    await page.getByRole('heading', {name:'節月調候 · 乙日申月'}).waitFor();
+    await page.locator('#pair-chart').getByRole('heading', {name:'什麼會讓彼此覺得被愛'}).waitFor();
+    assert.doesNotMatch(await page.locator('#chart').innerText(), /本氣|扶抑|權重|月令|傷官|命理依據/);
     assert.deepEqual(await page.locator('.pillars .pillar b').allTextContents(), ['時柱','日柱','月柱','年柱']);
     assert.equal(await page.locator('.annual-card').count(), 10);
     assert.equal(await page.locator('.trend svg').count(), 1);
@@ -378,7 +378,7 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     assert.ok((await metrics.count()) >= 12);
     const debtWarning = metrics.filter({hasText:'破財警示'});
     await debtWarning.locator('summary').first().click();
-    await debtWarning.locator('small').first().getByText(/財富傾向.*劫財權重/).waitFor();
+    await debtWarning.locator('p').first().waitFor();
     await current.getByText('十二節氣月').click();
     await current.getByText(/立春 · .*%/).waitFor();
     assert.equal(await current.locator('details article').count(), 12);
@@ -404,13 +404,14 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
       return execFileSync('pdftotext', ['-', '-'], {input:pdf, encoding:'utf8'}).replace(/\s+/g, '');
     }
     const personalPdf = await reportPdfText('chart');
-    assert.match(personalPdf, /八字本命盤/);
+    assert.match(personalPdf, /先聊聊你自己/);
     assert.match(personalPdf, /三大命理綜合報告/);
     assert.match(personalPdf, /十二節氣月/);
-    assert.match(personalPdf, /夫妻宮相關刑沖壓力/);
+    assert.doesNotMatch(personalPdf, /本氣|權重|傷官|扶抑|命理依據|合化/);
     assert.doesNotMatch(personalPdf, /雙盤行星相位|管理員登入|虛構命盤甲/);
     const pairPdf = await reportPdfText('pair-chart');
-    assert.match(pairPdf, /雙盤行星相位/);
+    assert.match(pairPdf, /什麼會讓彼此覺得被愛/);
+    assert.doesNotMatch(pairPdf, /容許度|日主|相位|七殺|化忌/);
     assert.match(pairPdf, /相處建議/);
     assert.match(pairPdf, /金錢觀與親密感/);
     assert.match(personalPdf, /三大命理綜合報告.*子女與教養/s);
