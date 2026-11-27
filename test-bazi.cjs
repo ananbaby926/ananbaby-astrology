@@ -117,7 +117,7 @@ test('同流年不同盤、同一盤同流年跨大運，分數與實際行動�
   assert.ok(before.scores.some((item,index) => item.advice !== after.scores[index].advice));
 });
 
-test('十二節月與十日干共 120 組可排盤，春月 30 組有分月候選', () => {
+test('十二節月與十日干共 120 組可排盤，每組都有分月調候候選', () => {
   const covered = new Set();
   for (let month = 1; month <= 12; month++) {
     for (let day = 10; day < 20; day++) {
@@ -125,11 +125,10 @@ test('十二節月與十日干共 120 組可排盤，春月 30 組有分月候�
       const monthBranch = profile.pillars[1][1];
       covered.add(monthBranch + profile.day);
       assert.ok(profile.preference.every(Number.isFinite));
-      if ('寅卯辰'.includes(monthBranch)) {
-        assert.ok(profile.seasonalCandidates.length > 0);
-      } else {
-        assert.equal(profile.seasonalCandidates.length, 0);
-      }
+      const candidates = Array.from(profile.seasonalCandidates, candidate => candidate.stem);
+      assert.ok(candidates.length > 0);
+      assert.equal(new Set(candidates).size, candidates.length);
+      assert.ok(candidates.every(stem => '甲乙丙丁戊己庚辛壬癸'.includes(stem)));
       assert.ok(Math.abs(profile.weights.reduce((sum, weight) => sum + weight, 0) - 9) < 1e-10);
     }
   }
@@ -148,6 +147,26 @@ test('同為寅月，丙、丁日取用不同；癸日辰月按穀雨秒級分�
   const spring = Array.from({length:10}, (_, index) => model([2024,2,index+10,12]));
   assert.equal(targets(spring.find(profile => profile.day === '丙')), '壬庚');
   assert.equal(targets(spring.find(profile => profile.day === '丁')), '庚');
+});
+
+test('夏至、大暑、秋分與大寒分段會改變同節月的調候取用', () => {
+  const fixtures = [
+    [[2024,6,20,12], [2024,6,30,12], '乙', '午', '癸', /^(癸丙|丙癸)$/],
+    [[2024,7,18,12], [2024,7,28,12], '癸', '未', '庚辛壬', /^庚辛$/],
+    [[2024,9,18,12], [2024,9,28,12], '乙', '酉', '癸', /^丙癸$/],
+    [[2024,1,19,12], [2024,1,29,12], '壬', '丑', '丙', /^丙甲$/]
+  ];
+  for (const [early, late, dayStem, monthBranch, expectedEarly, expectedLate] of fixtures) {
+    const before = model(early);
+    const after = model(late);
+    assert.equal(before.day, dayStem);
+    assert.equal(after.day, dayStem);
+    assert.equal(before.pillars[1][1], monthBranch);
+    assert.equal(after.pillars[1], before.pillars[1]);
+    const targets = profile => Array.from(profile.seasonalCandidates, candidate => candidate.stem).join('');
+    assert.equal(targets(before), expectedEarly);
+    assert.match(targets(after), expectedLate);
+  }
 });
 
 test('流年透干引動原局與大運六合，火土氣量同步轉移', () => {
@@ -190,6 +209,7 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.locator('[name=birth_place]').fill('虛構城');
     await page.locator('#calculate').click();
     await page.getByText('八字本命盤').waitFor();
+    await page.getByRole('heading', {name:'節月調候 · 乙日申月'}).waitFor();
     assert.deepEqual(await page.locator('.pillars .pillar b').allTextContents(), ['時柱','日柱','月柱','年柱']);
     assert.equal(await page.locator('.annual-card').count(), 10);
     assert.equal(await page.locator('.trend svg').count(), 1);
