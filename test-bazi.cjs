@@ -341,6 +341,11 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     assert.equal(await page.locator('.annual-card').count(), 10);
     assert.equal(await page.locator('.trend svg').count(), 1);
     const current = page.locator('.annual-card.current-year');
+    const metrics = current.locator('.annual-metric');
+    assert.ok((await metrics.count()) >= 12);
+    const debtWarning = metrics.filter({hasText:'破財警示'});
+    await debtWarning.locator('summary').first().click();
+    await debtWarning.locator('small').first().getByText(/財富傾向.*劫財權重/).waitFor();
     await current.getByText('十二節氣月').click();
     await current.getByText(/立春 · .*%/).waitFor();
     assert.equal(await current.locator('details article').count(), 12);
@@ -369,6 +374,7 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     assert.match(personalPdf, /八字本命盤/);
     assert.match(personalPdf, /三大命理綜合報告/);
     assert.match(personalPdf, /十二節氣月/);
+    assert.match(personalPdf, /夫妻宮相關刑沖壓力/);
     assert.doesNotMatch(personalPdf, /雙盤行星相位|管理員登入|虛構命盤甲/);
     const pairPdf = await reportPdfText('pair-chart');
     assert.match(pairPdf, /雙盤行星相位/);
