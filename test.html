@@ -797,32 +797,58 @@ function ziweiTopic(ziwei, name) {
     (natal.majorStars.length ? '主星 ' : '對宮參照 ') + (stars.map(star => star.name).join('、') || '無') +
     '。大限' + name + '落' + (decadal?.earthlyBranch || '未定位') + '，流年' + name + '落' + annual.earthlyBranch +
     (applied.length ? '，同宮流年四化 ' + applied.join('、') : '');
-  return {basis, topic:starThemes[stars[0]?.name] || '先確認角色與承諾',
-    concern:applied.some(star => star.endsWith('忌')), natal};
+  const topic = starThemes[stars[0]?.name] || '角色與承諾';
+  const annualTheme = starThemes[annual.majorStars[0]?.name];
+  const decadalTheme = starThemes[decadal?.majorStars[0]?.name];
+  const concern = applied.some(star => star.endsWith('忌'));
+  const favourable = applied.some(star => /[祿權科]$/.test(star));
+  const layers = ['長期習慣可先看' + topic];
+  if (decadalTheme) layers.push('這步大限要處理' + decadalTheme);
+  if (annualTheme) layers.push('今年尤其要看' + annualTheme);
+  if (concern) layers.push(applied.filter(star => star.endsWith('忌')).join('、') + '是今年優先核對的環節，先釐清反覆卡住的事情');
+  if (favourable) layers.push(applied.filter(star => /[祿權科]$/.test(star)).join('、') + '提供可檢視的進展方向');
+  return {basis, topic, concern, favourable, interpretation:layers.join('。') + '。', natal};
 }
 
-const houseThemes = ['表達立場','費用與資源','溝通節奏','居家分工','作品與約會','工作與生活流程',
-  '一對一約定','共同資源','學習與拓展','職責與能見度','團隊協作','休息與個人界線'];
+const houseThemes = [
+  ['表達立場','先把你的底線說清楚，請另一方複述一次'],
+  ['費用與資源','用實際金額和可以承擔的工時來談'],
+  ['溝通節奏','把口頭決定寫下來，約定回覆期限'],
+  ['居家分工','把家務、照顧和休息時間排進同一張表'],
+  ['作品與約會','先安排一次能看見成果或彼此反應的小嘗試'],
+  ['工作與生活流程','把每週最常重做的一件事改成明確流程'],
+  ['一對一約定','談清楚雙方各自負責和可以拒絕的範圍'],
+  ['共同資源','分開記錄各自所有與共同負擔的資源'],
+  ['學習與拓展','先完成一個小型試案，再決定要不要擴張'],
+  ['職責與能見度','列出已交付成果和希望獲得的明確權限'],
+  ['團隊協作','先約定誰決定、誰執行、誰記錄'],
+  ['休息與個人界線','排出可以不回訊息的時間，再談緊急例外']
+];
 const threeTopics = [
-  ['事業','官祿','Saturn','先把目標、權限及驗收方式寫下來'],
-  ['財富','財帛','Venus','把固定收入、共同支出及可以承受的損失分開算'],
-  ['感情','夫妻','Moon','把相處時間、家庭界線與共同預算談成可以執行的約定']
+  ['事業','官祿','Saturn'], ['創業','官祿','Mars'], ['升遷','官祿','Sun'],
+  ['財富','財帛','Venus'], ['負債','財帛','Saturn'], ['置產','田宅','Moon'],
+  ['感情','夫妻','Moon'], ['婚姻與伴侶','夫妻','Venus'], ['家庭','父母','Moon'],
+  ['子女與教養','子女','Mercury'], ['天賦','命宮','Sun'], ['個性與弱點','命宮','Mercury'],
+  ['人際與合作','僕役','Mercury'], ['貴人','僕役','Jupiter']
 ];
 
 function combinedTopics(bazi, ziwei, western) {
-  return threeTopics.map(([label, palaceName, body, action]) => {
+  return threeTopics.map(([label, palaceName, body]) => {
     const eastern = bazi.scores.find(item => item.label === label);
     const purple = ziweiTopic(ziwei, palaceName);
     const position = western.positions.find(item => item.body === body);
-    const aspect = western.aspects.find(item =>
-      (item.left === body || item.right === body) && item.conflict);
+    const aspect = western.aspects.find(item => item.left === body || item.right === body);
+    const [focus, practical] = houseThemes[position.house - 1];
     const westernBasis = westernBodies[body] + zodiac[position.sign] + '，第 ' + position.house + ' 宮，對應' +
-      houseThemes[position.house - 1] + (aspect ? '，另見' + aspectLabel(aspect) : '');
-    const caution = eastern.friction > 0 || purple.concern || Boolean(aspect);
-    return {label, bazi:eastern, purple, westernBasis, action,
-      conclusion:(caution ? '先處理容易起摩擦的環節。' : '可以先挑一件具體的事推進。') +
-        '八字優先看' + eastern.star + '牽動的行動，紫微留意' + purple.topic +
-        '，西洋盤聚焦' + houseThemes[position.house - 1] + '。' + action + '。'};
+      focus + (aspect ? '，另見' + aspectLabel(aspect) : '');
+    const baziPressure = eastern.friction >= 4 || bazi.fit < 0;
+    let synthesis = '八字和紫微指出的環節分開觀察，先從近期遇到的一件事核對。';
+    if (baziPressure && purple.concern) synthesis = '八字和紫微今年都提示要先處理卡住的環節。';
+    if (baziPressure && purple.favourable) synthesis = '紫微有可推進的方向，八字同時提示阻力，適合先把規模縮小再試。';
+    const westernReading = '西洋本命盤長期可觀察' + focus + '。' +
+      (aspect?.conflict ? '遇到分歧時，' : '可以先') + practical + '。';
+    return {label, bazi:eastern, purple, westernBasis, westernReading,
+      conclusion:synthesis + eastern.advice + ' ' + purple.interpretation + ' ' + westernReading};
   });
 }
 
@@ -847,22 +873,43 @@ function comparePeople(first, second) {
   const personalBodies = point => ['Sun','Moon','Mercury','Venus','Mars'].includes(point.body);
   const aspects = westernAspects(first.western.positions.filter(personalBodies), second.western.positions.filter(personalBodies));
   const friction = relationships.find(hit => pressure[hit.kind]);
-  const closeAspect = aspects.find(aspect => aspect.conflict && aspect.orb < 3);
-  const actions = {
-    Sun:'先談兩人各自想主導的事，寫清楚哪些決定要一起做',
-    Moon:'先約定情緒上來時怎麼暫停、何時回來把話說完',
-    Mercury:'有歧見時先複述對方意思，再各寫一個可執行的做法',
-    Venus:'先談共同預算、個人支出及雙方覺得被重視的方式',
-    Mars:'碰到趕時間或分工不均，先約定誰處理、誰支援'
-  };
+  const cooperation = relationships.find(hit => hit.target !== null);
+  const themes = [
+    ['溝通與吵架','Mercury',
+      '一方急著把問題說清楚，另一方可能還在消化語氣，容易誤會對方在敷衍或逼問。',
+      '碰到不同意見時，較有機會把抽象不滿講成一件可以處理的事。',
+      '各用一句話說出自己的要求，再約好何時回來談'],
+    ['安全感與相處節奏','Moon',
+      '一方可能想立刻得到回應，另一方需要獨處或按自己的節奏。壓力大時尤其容易把沉默解讀成不在乎。',
+      '彼此較容易察覺對方何時需要陪伴，或何時需要先休息。',
+      '各說一件希望對方固定做到的事，先試兩週'],
+    ['金錢觀與親密感','Venus',
+      '禮物、約會開銷或表達喜歡的方式可能不同。一方覺得是在照顧對方，另一方可能感到有壓力。',
+      '有機會找到彼此都喜歡的日常安排，尤其是怎麼花共同的時間與預算。',
+      '分開談花費和被在意的感受，各訂一個可做到的界線'],
+    ['主導權與做事節奏','Mars',
+      '遇到趕時間的事，一方可能先做決定，另一方覺得自己沒有被問到。',
+      '共同處理一件有截止日的事時，較容易分配行動和支援。',
+      '各選一件順序由自己決定的事，共同承擔的事先談分工']
+  ];
+  const stories = themes.map(([label, body, tension, ease, action]) => {
+    const relevant = aspects.filter(aspect => aspect.left === body || aspect.right === body);
+    const risk = relevant.find(aspect => aspect.conflict);
+    const support = relevant.find(aspect => ['拱相','六合'].includes(aspect.name));
+    const conjunction = relevant.find(aspect => aspect.name === '合相');
+    const describePair = aspect => '甲方' + aspectLabel(aspect).replace('與','與乙方');
+    const evidence = [risk, support, conjunction].filter(Boolean).map(describePair);
+    const pressureText = risk ? tension : '';
+    const supportText = support ? ease : '';
+    const conjunctionText = conjunction ? '兩人可能特別在意同一件事，接著看彼此是否能留空間。' : '';
+    return {label, evidence:evidence.join('、'),
+      advice:evidence.length ? pressureText + supportText + conjunctionText + '實際可以' + action + '。' : ''};
+  });
   const guidance = [];
-  if (friction) guidance.push(named(friction) + '，先確認同住作息、家庭界線和責任分工。');
-  if (closeAspect) {
-    const focus = [closeAspect.left, closeAspect.right].find(body => body !== 'Sun') || 'Sun';
-    guidance.push(aspectLabel(closeAspect) + '，' + actions[focus] + '。');
-  }
-  if (!guidance.length) guidance.push('先用一次共同分工檢查彼此默契。甲方留意' + aPalace.topic + '，乙方留意' + bPalace.topic + '。');
-  return {dayRelations, direction, aPalace, bPalace, aspects, advice:guidance.join('')};
+  if (friction) guidance.push(named(friction) + '，先觀察同住作息、家庭界線和責任分工在哪裡最常卡住。');
+  if (cooperation) guidance.push(named(cooperation) + '，可以從一件雙方都願意分工的日常小事驗證默契。');
+  guidance.push('甲方比較值得談的是' + aPalace.topic + '，乙方比較值得談的是' + bPalace.topic + '。');
+  return {dayRelations, direction, aPalace, bPalace, aspects, stories, advice:guidance.join('')};
 }
 // 三系統核心結束
 function locationFields(prefix) {
@@ -944,15 +991,20 @@ function renderPair(out, first, second) {
   heading(out, '雙人合盤');
   article(out, '八字 · 夫妻宮與喜用', (result.dayRelations.join('、') || '夫妻宮未檢出本站兩盤交互組合') + '。',
     '甲方 ' + first.bazi.day + '日主看乙方 ' + second.bazi.day + '，' +
-    (result.direction[0] ? '取用有助力' : '助力有限') + '。乙方看甲方，' +
-    (result.direction[1] ? '取用有助力' : '助力有限') + '。合盤關係以交互位置指出，合化依各自原局判讀。');
+    (result.direction[0] ? '乙方日干五行在甲方原局屬正向取用' : '乙方日干五行在甲方原局未列入正向取用') +
+    '。乙方看甲方，' + (result.direction[1] ? '甲方日干五行在乙方原局屬正向取用' : '甲方日干五行在乙方原局未列入正向取用') +
+    '。日干只代表其中一項五行互動。');
   article(out, '紫微 · 伴侶期待', '甲方先談' + result.aPalace.topic + '，乙方先談' + result.bPalace.topic + '。',
     '甲方 ' + result.aPalace.basis + '。乙方 ' + result.bPalace.basis);
   article(out, '西洋 · 雙盤行星相位',
     result.aspects.slice(0, 8).map(aspect => '甲方' + aspectLabel(aspect).replace('與', '與乙方')).join('、') ||
       '兩人的個人行星在指定容許度內沒有主要交互相位。',
     '比較雙方的太陽、月亮、水星、金星及火星。');
+  for (const story of result.stories) {
+    article(out, story.label, story.advice || '這一項在設定的容許度內沒有主要相位，可從實際相處觀察。', story.evidence);
+  }
   article(out, '相處建議', result.advice);
+  note(out, '合盤用來整理彼此可以觀察和討論的事，兩人的決定以實際相處為準。');
   const print = node('button', '列印／儲存雙人 PDF');
   print.type = 'button';
   print.onclick = () => printReport(out);
