@@ -30,7 +30,7 @@ before(async () => {
   const systems = main.split('// 三系統核心開始')[1].split('// 三系統核心結束')[0];
   vm.runInContext(bazi + systems +
     '\n globalThis.api = {Solar, chartModel, solarTerms, reading, activeLuck, slices, keyOf,' +
-    ' westernChart, westernAspects, ziweiChart, combinedTopics, comparePeople};', context);
+    ' westernChart, westernAspects, ziweiChart, combinedTopics, comparePeople, relations};', context);
   api = context.api;
 });
 
@@ -278,6 +278,19 @@ test('更換乙方會改變合盤相位和三系統綜合報告內容', () => {
   assert.ok(aThemes.every((theme,index) => theme.conclusion !== cThemes[index].conclusion));
 });
 
+test('雙盤關係具交換對稱性，並只保留真正跨盤的組合', () => {
+  const a = model([1988,8,8,8]);
+  const b = model([2000,1,1,20]);
+  const links = api.relations([...a.pillars,...b.pillars], {crossChart:true});
+  const swapped = api.relations([...b.pillars,...a.pillars], {crossChart:true});
+  assert.ok(links.length > 0);
+  assert.ok(links.every(hit => hit.slots.some(slot => slot < 4) &&
+    hit.slots.some(slot => slot >= 4) && hit.transforms === undefined));
+  const keys = (hits, flip) => Array.from(hits, hit => hit.kind + hit.symbols +
+    Array.from(hit.slots, slot => flip ? (slot + 4) % 8 : slot).sort().join('')).sort();
+  assert.deepEqual(keys(links,false), keys(swapped,true));
+});
+
 test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !process.env.BAZI_BROWSER}, async () => {
   const {chromium} = require('playwright');
   const browser = await chromium.launch({executablePath:process.env.BAZI_BROWSER, args:['--no-sandbox']});
@@ -338,6 +351,14 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     const pdf = await page.pdf({format:'A4'});
     assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
     assert.ok(pdf.length > 1000);
+    await second.locator('[name=birth_date]').fill('1992-12-13');
+    assert.equal(await page.locator('#pair-chart article').count(), 0);
+    assert.equal(await page.locator('#chart .annual-card').count(), 10);
+    await second.getByRole('button', {name:'計算雙人合盤'}).click();
+    await page.locator('#pair-chart article').first().waitFor();
+    await page.locator('#profile [name=birth_time]').fill('09:00:00');
+    assert.equal(await page.locator('#pair-chart article').count(), 0);
+    assert.equal(await page.locator('#chart .annual-card').count(), 0);
     assert.deepEqual(errors, []);
     assert.deepEqual(unexpected, []);
   } finally {
