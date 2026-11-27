@@ -1,6 +1,6 @@
 /*
  * Run: node --test test-bazi.cjs
- * Set LUNAR_JS to a local lunar-javascript 1.6.12 lunar.js for offline use.
+ * Offline inputs: LUNAR_JS (1.6.12), IZTRO_JS (2.6.5), ASTRONOMY_JS (2.1.19).
  * Optional browser checks: set BAZI_BROWSER to a Chromium executable and install playwright.
  * No request is sent to Supabase.
  */
@@ -11,20 +11,26 @@ const {test, before} = require('node:test');
 const assert = require('node:assert/strict');
 
 const html = fs.readFileSync(path.join(__dirname, 'test.html'), 'utf8');
-const libraryURL = html.match(/<script src="([^"]*lunar-javascript[^"]*)"/)[1];
-let library;
+const dependencyURLs = [...html.matchAll(/<script src="([^"]+)"/g)].map(match => match[1]);
+const localPaths = [process.env.LUNAR_JS, process.env.IZTRO_JS, process.env.ASTRONOMY_JS];
+let dependencies;
 let api;
 before(async () => {
-  if (process.env.LUNAR_JS) library = fs.readFileSync(process.env.LUNAR_JS, 'utf8');
-  else {
-    const response = await fetch(libraryURL, {signal: AbortSignal.timeout(10000)});
-    assert.ok(response.ok, 'lunar-javascript failed to load');
-    library = await response.text();
-  }
+  dependencies = await Promise.all(dependencyURLs.map(async (url, index) => {
+    if (localPaths[index]) return fs.readFileSync(localPaths[index], 'utf8');
+    const response = await fetch(url, {signal: AbortSignal.timeout(10000)});
+    assert.ok(response.ok, 'Could not load ' + url);
+    return response.text();
+  }));
   const context = vm.createContext({});
-  vm.runInContext(library, context);
-  const script = html.split('<script>')[1].split('// 八字核心結束')[0];
-  vm.runInContext(script + '\n globalThis.api = {Solar, chartModel, solarTerms, reading, activeLuck, slices, keyOf};', context);
+  context.self = context;
+  for (const source of dependencies) vm.runInContext(source, context);
+  const main = html.split('<script>')[1];
+  const bazi = main.split('// 八字核心結束')[0];
+  const systems = main.split('// 三系統核心開始')[1].split('// 三系統核心結束')[0];
+  vm.runInContext(bazi + systems +
+    '\n globalThis.api = {Solar, chartModel, solarTerms, reading, activeLuck, slices, keyOf,' +
+    ' westernChart, westernAspects, ziweiChart, combinedTopics, comparePeople};', context);
   api = context.api;
 });
 
@@ -221,6 +227,57 @@ test('從格遇印比、專旺遇月令沖時，警示與分數隨運歲觸發',
   assert.equal(strong.special, '潤下專旺');
 });
 
+test('紫微十二宮與農曆閏月盤，命宮與身宮依月和時辰推算', () => {
+  const normal = api.ziweiChart(date(2000,1,1,12), 'female', date(2026,11,27));
+  // 十一月起子時在子宮，午時逆數至午宮，順數亦至午宮。
+  assert.equal(normal.chart.earthlyBranchOfSoulPalace, '午');
+  assert.equal(normal.chart.earthlyBranchOfBodyPalace, '午');
+  assert.equal(normal.chart.palaces.length, 12);
+  assert.equal(new Set(normal.chart.palaces.map(palace => palace.name)).size, 12);
+  assert.equal(normal.chart.palaces.find(palace => palace.name === '命宮').majorStars[0].name, '紫微');
+  assert.equal(normal.horoscope.yearly.heavenlyStem + normal.horoscope.yearly.earthlyBranch, '丙午');
+  const leap = api.ziweiChart(date(2023,3,22), 'male', date(2026,11,27));
+  assert.equal(leap.chart.earthlyBranchOfSoulPalace, '卯');
+  assert.match(leap.chart.lunarDate, /[閏闰]二月/);
+});
+
+test('西洋占星：J2000 黃經算例、座標影響上升而非行星黃經、跨零度相位', () => {
+  const birth = date(2000,1,1,20);
+  const taipei = api.westernChart(birth, 25.033, 121.5654);
+  const equator = api.westernChart(birth, 0, 0);
+  assert.equal(taipei.instant.toISOString(), '2000-01-01T12:00:00.000Z');
+  const [sun, moon] = taipei.positions;
+  assert.ok(Math.abs(sun.longitude - 280.37) < .08);
+  assert.ok(Math.abs(moon.longitude - 223.32) < .08);
+  assert.equal(sun.longitude, equator.positions[0].longitude);
+  assert.notEqual(equator.ascendant, taipei.ascendant);
+  // At Greenwich on J2000, local apparent sidereal angle is near 280.46°.
+  // Ecliptic rotation gives an eastern intersection near Aries 11.4°.
+  assert.ok(Math.abs(equator.ascendant - 11.38) < .2);
+  const cross = api.westernAspects([{body:'Sun',longitude:359}], [{body:'Moon',longitude:1}]);
+  assert.equal(cross[0].name, '合相');
+  assert.equal(cross[0].orb, 2);
+});
+
+test('更換乙方會改變合盤相位和三系統綜合報告內容', () => {
+  const now = date(2026,11,27);
+  function person(stamp) {
+    const birth = date(...stamp);
+    const bazi = api.chartModel(birth, 'female');
+    return {bazi, reading:api.reading(bazi, now), ziwei:api.ziweiChart(birth, 'female', now),
+      western:api.westernChart(birth,25.033,121.5654)};
+  }
+  const a = person([1988,8,8,8]);
+  const b = person([2000,1,1,20]);
+  const c = person([1992,12,13,0]);
+  assert.notDeepEqual(api.comparePeople(a,b).dayRelations, api.comparePeople(a,c).dayRelations);
+  assert.notDeepEqual(api.comparePeople(a,b).aspects, api.comparePeople(a,c).aspects);
+  const aThemes = api.combinedTopics(a.reading, a.ziwei, a.western);
+  const cThemes = api.combinedTopics(c.reading, c.ziwei, c.western);
+  assert.equal(aThemes.length, 3);
+  assert.ok(aThemes.every((theme,index) => theme.conclusion !== cThemes[index].conclusion));
+});
+
 test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !process.env.BAZI_BROWSER}, async () => {
   const {chromium} = require('playwright');
   const browser = await chromium.launch({executablePath:process.env.BAZI_BROWSER, args:['--no-sandbox']});
@@ -232,7 +289,8 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.route('**/*', route => {
       const url = route.request().url();
       if (url === 'https://test.invalid/test.html') return route.fulfill({contentType:'text/html',body:html});
-      if (url === libraryURL) return route.fulfill({contentType:'application/javascript',body:library});
+      const dependency = dependencyURLs.indexOf(url);
+      if (dependency >= 0) return route.fulfill({contentType:'application/javascript',body:dependencies[dependency]});
       if (url.includes('supabase-js')) return route.fulfill({
         contentType:'application/javascript', body:'export const createClient = () => ({});',
         headers:{'access-control-allow-origin':'*'}
@@ -243,11 +301,19 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.clock.setFixedTime(new Date('2026-11-27T10:00:00Z'));
     await page.goto('https://test.invalid/test.html');
     await page.locator('[name=nickname]').fill('虛構命盤甲');
-    await page.locator('[name=birth_date]').fill('1988-08-08');
-    await page.locator('[name=birth_time]').fill('08:00:00');
+    await page.locator('#profile [name=birth_date]').fill('1988-08-08');
+    await page.locator('#profile [name=birth_time]').fill('08:00:00');
     await page.locator('[name=birth_place]').fill('虛構城');
     await page.locator('#calculate').click();
     await page.getByText('八字本命盤').waitFor();
+    await page.getByRole('heading', {name:'紫微斗數 · 十二宮'}).waitFor();
+    await page.getByRole('heading', {name:'西洋占星 · 本命盤'}).waitFor();
+    await page.getByRole('heading', {name:'三大命理綜合報告'}).waitFor();
+    const second = page.locator('#pair-form');
+    await second.locator('[name=birth_date]').fill('2000-01-01');
+    await second.locator('[name=birth_time]').fill('20:00:00');
+    await second.getByRole('button', {name:'計算雙人合盤'}).click();
+    await page.locator('#pair-chart').getByRole('heading', {name:'西洋 · 雙盤行星相位'}).waitFor();
     await page.getByRole('heading', {name:'節月調候 · 乙日申月'}).waitFor();
     assert.deepEqual(await page.locator('.pillars .pillar b').allTextContents(), ['時柱','日柱','月柱','年柱']);
     assert.equal(await page.locator('.annual-card').count(), 10);
@@ -258,12 +324,20 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     assert.equal(await current.locator('details article').count(), 12);
     await page.evaluate(() => {
       window.print = () => {
+        document.body.dataset.printTarget = document.body.dataset.printReport;
         document.body.dataset.printableMonths = document.querySelectorAll('#chart .annual-card details[open] article').length;
       };
     });
     await page.locator('#chart').getByText('列印／儲存 PDF').click();
     assert.ok(Number(await page.locator('body').getAttribute('data-printable-months')) >= 120);
+    assert.equal(await page.locator('body').getAttribute('data-print-target'), 'chart');
     assert.equal(await page.locator('.annual-card[open]').count(),1);
+    await page.getByRole('button', {name:'列印／儲存雙人 PDF'}).click();
+    assert.equal(await page.locator('body').getAttribute('data-print-target'), 'pair-chart');
+    await page.evaluate(() => { document.body.dataset.printReport = 'pair-chart'; });
+    const pdf = await page.pdf({format:'A4'});
+    assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
+    assert.ok(pdf.length > 1000);
     assert.deepEqual(errors, []);
     assert.deepEqual(unexpected, []);
   } finally {
