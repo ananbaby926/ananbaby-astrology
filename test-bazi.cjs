@@ -117,6 +117,52 @@ test('同流年不同盤、同一盤同流年跨大運，分數與實際行動�
   assert.ok(before.scores.some((item,index) => item.advice !== after.scores[index].advice));
 });
 
+test('十二節月與十日干共 120 組可排盤，春月 30 組有分月候選', () => {
+  const covered = new Set();
+  for (let month = 1; month <= 12; month++) {
+    for (let day = 10; day < 20; day++) {
+      const profile = model([2024,month,day,12]);
+      const monthBranch = profile.pillars[1][1];
+      covered.add(monthBranch + profile.day);
+      assert.ok(profile.preference.every(Number.isFinite));
+      if ('寅卯辰'.includes(monthBranch)) {
+        assert.ok(profile.seasonalCandidates.length > 0);
+      } else {
+        assert.equal(profile.seasonalCandidates.length, 0);
+      }
+      assert.ok(Math.abs(profile.weights.reduce((sum, weight) => sum + weight, 0) - 9) < 1e-10);
+    }
+  }
+  assert.equal(covered.size, 120);
+});
+
+test('同為寅月，丙、丁日取用不同；癸日辰月按穀雨秒級分段', () => {
+  const targets = p => Array.from(p.seasonalCandidates, candidate => candidate.stem).join('');
+  const before = model([2024,4,19,12]);
+  const after = model([2024,4,19,23]);
+  assert.equal(before.day, '癸');
+  assert.equal(after.day, '癸');
+  assert.equal(before.pillars[1], after.pillars[1]);
+  assert.equal(targets(before), '丙');
+  assert.equal(targets(after), '丙辛甲');
+  const spring = Array.from({length:10}, (_, index) => model([2024,2,index+10,12]));
+  assert.equal(targets(spring.find(profile => profile.day === '丙')), '壬庚');
+  assert.equal(targets(spring.find(profile => profile.day === '丁')), '庚');
+});
+
+test('流年透干引動原局與大運六合，火土氣量同步轉移', () => {
+  const person = model([1994,11,1,12]);
+  const previous = api.reading(person, date(2027,7,15,12));
+  const current = api.reading(person, date(2028,7,15,12));
+  assert.equal(previous.luck, '辛未');
+  assert.equal(current.luck, '辛未');
+  assert.equal(previous.year, '丁未');
+  assert.equal(current.year, '戊申');
+  assert.ok(previous.natalShift.every(value => value === 0));
+  assert.deepEqual(Array.from(current.natalShift), [0,-.7,.7,0,0]);
+  assert.ok(current.hits.some(hit => hit.symbols === '午未' && hit.transforms));
+});
+
 test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !process.env.BAZI_BROWSER}, async () => {
   const {chromium} = require('playwright');
   const browser = await chromium.launch({executablePath:process.env.BAZI_BROWSER, args:['--no-sandbox']});
