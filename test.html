@@ -95,7 +95,53 @@ const seasonalClimate = [
   [3, 2], [2, 3], [1, 1], [0, 2], [-1, 3], [-3, -2]
 ];
 
-function natalModel(pillars) {
+// 春月候選次序節錄自《窮通寶鑑》各日干條目，逐月核對。
+// https://zh.wikisource.org/wiki/窮通寶鑑
+// 寅、卯、辰依節氣分界。其餘九月沿用寒暖燥濕規則。
+const springCandidates = {
+  甲: ['丙癸', '庚', '庚壬'],
+  乙: ['丙癸', '丙癸', '癸丙'],
+  丙: ['壬庚', '壬', '壬甲'],
+  丁: ['庚', '庚甲', '甲庚'],
+  戊: ['丙甲癸', '丙甲癸', '甲丙癸'],
+  己: ['丙', '甲癸', '丙癸甲'],
+  庚: ['丙甲', '丁甲', '甲丁'],
+  辛: ['己壬', '壬甲', '壬甲'],
+  壬: ['庚丙戊', '戊辛', '甲庚'],
+  癸: ['辛丙', '庚辛', '丙']
+};
+
+function springAdvice(pillars, weights, at) {
+  const day = pillars[2][0];
+  const month = '寅卯辰'.indexOf(pillars[1][1]);
+  if (month < 0) return [];
+  let candidates = springCandidates[day][month];
+  if (day === '癸' && month === 2 && at) {
+    const grainRain = at.getLunar().getJieQiTable()['谷雨'];
+    if (at.toYmdHms() >= grainRain.toYmdHms()) candidates = '丙辛甲';
+  }
+  return [...candidates].map((stem, index) => {
+    const exposed = pillars.some((pillar, slot) => slot !== 2 && pillar[0] === stem);
+    const rooted = pillars.some(pillar => branchStems(pillar[1]).includes(stem));
+    const element = el(stem);
+    const excess = weights[element] >= 4;
+    return {stem, exposed, rooted, excess, element,
+      boost: excess ? 0 : (exposed && rooted ? .65 : 1.15) / (index + 1)};
+  });
+}
+
+function transformedElement(hits, slot, isStem) {
+  return hits.find(hit => hit.transforms && (hit.kind === '天干五合') === isStem &&
+    hit.slots.includes(slot))?.target;
+}
+
+function branchShares(branch) {
+  const letters = branchStems(branch);
+  const fractions = [[1], [.7, .3], [.6, .25, .15]][letters.length - 1];
+  return letters.map((stem, index) => [stem, fractions[index]]);
+}
+
+function natalModel(pillars, birth) {
   const day = pillars[2][0];
   const self = el(day);
   const weights = Array(5).fill(0);
@@ -109,12 +155,9 @@ function natalModel(pillars) {
     gods[god(day, stem)] = (gods[god(day, stem)] || 0) + weight;
   }
   pillars.forEach(([stem, branch], index) => {
-    const stemChange = hits.find(hit => hit.transforms && hit.kind === '天干五合' && hit.slots.includes(index));
-    const branchChange = hits.find(hit => hit.transforms && hit.kind !== '天干五合' && hit.slots.includes(index));
-    if (index !== 2) add(stem, 1, stemChange?.target);
-    branchStems(branch).forEach((hiddenStem, rank, all) => {
-      const fractions = [[1], [.7, .3], [.6, .25, .15]][all.length - 1];
-      add(hiddenStem, fractions[rank] * (index === 1 ? 3 : 1), branchChange?.target);
+    if (index !== 2) add(stem, 1, transformedElement(hits, index, true));
+    branchShares(branch).forEach(([hiddenStem, fraction], rank) => {
+      add(hiddenStem, fraction * (index === 1 ? 3 : 1), transformedElement(hits, index, false));
       if (el(hiddenStem) === self) roots.push(labels[index] + hiddenStem + (rank === 0 ? '本氣' : '餘氣'));
     });
   });
@@ -149,16 +192,19 @@ function natalModel(pillars) {
     return balance.includes(element) ? 2 - balance.indexOf(element) * .25 :
       balance.length ? -1.6 : (1.8 - weight) * .4;
   });
-  const preference = balanceScore.map((value, index) => value + climate[index]);
+  const seasonalCandidates = springAdvice(pillars, weights, birth);
+  const climateWithSeason = [...climate];
+  if (!special) for (const candidate of seasonalCandidates) climateWithSeason[candidate.element] += candidate.boost;
+  const preference = balanceScore.map((value, index) => value + climateWithSeason[index]);
   const priority = [...preference.keys()].sort((a, b) => preference[b] - preference[a]);
   return {pillars, day, weights, gods, roots, command, allies, state, support, monthStems, exposed,
-    special, ordinary, heat, dryness, climate, balanceScore, preference, priority, hits};
+    special, ordinary, heat, dryness, climate: climateWithSeason, seasonalCandidates, balanceScore, preference, priority, hits};
 }
 
 function chartModel(birth, gender) {
   const ec = birth.getLunar().getEightChar();
   ec.setSect(2);
-  const model = natalModel(pillarKeys.map(key => ec['get' + key]()));
+  const model = natalModel(pillarKeys.map(key => ec['get' + key]()), birth);
   const yun = ec.getYun(gender === 'male' ? 1 : 0, 2);
   const start = yun.getStartSolar();
   const periods = yun.getDaYun(23).slice(1).map((period, index) => ({
@@ -230,22 +276,35 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
   const year = yearAnchor.getLunar().getEightChar().getYear();
   const month = monthly ? solar.getLunar().getEightChar().getMonth() : null;
   const pillars = [...model.pillars, luck, year, month];
-  const hits = relations(pillars).filter(hit => hit.slots.some(index => index >= 4));
+  const allHits = relations(pillars);
+  const hits = allHits.filter(hit => hit.slots.some(index => index >= 4));
+  const natalShift = Array(5).fill(0);
+  for (let index = 0; index < 4; index++) {
+    const [stem, branch] = pillars[index];
+    const components = branchShares(branch).map(([letter, share]) => [letter, share * (index === 1 ? 3 : 1), false]);
+    if (index !== 2) components.push([stem, 1, true]);
+    for (const [letter, amount, isStem] of components) {
+      const oldElement = transformedElement(model.hits, index, isStem) ?? el(letter);
+      const newElement = transformedElement(allHits, index, isStem) ?? el(letter);
+      if (oldElement === newElement) continue;
+      natalShift[oldElement] -= amount;
+      natalShift[newElement] += amount;
+    }
+  }
   const stars = Object.fromEntries(tenGods.map(star => [star, (model.gods[star] || 0) * .55]));
   const movement = Array(5).fill(0);
   const multipliers = [1.3, 1, .64];
   for (let index = 4; index < pillars.length; index++) {
     if (!pillars[index]) continue;
     const [stem, branch] = pillars[index];
-    const stemChange = hits.find(hit => hit.transforms && hit.kind === '天干五合' && hit.slots.includes(index));
-    const branchChange = hits.find(hit => hit.transforms && hit.kind !== '天干五合' && hit.slots.includes(index));
-    for (const [letter, intensity, change] of [[stem, 1, stemChange], [branchStems(branch)[0], .8, branchChange]]) {
-      const element = change?.target ?? el(letter);
+    const components = [[stem, 1, true], ...branchShares(branch).map(([letter, share]) => [letter, share * .8, false])];
+    for (const [letter, intensity, isStem] of components) {
+      const element = transformedElement(allHits, index, isStem) ?? el(letter);
       movement[element] += intensity * multipliers[index - 4];
       stars[god(model.day, letter)] += intensity * multipliers[index - 4];
     }
   }
-  const fit = movement.reduce((sum, weight, element) => sum + weight * model.preference[element], 0);
+  const fit = movement.reduce((sum, weight, element) => sum + (weight + .55 * natalShift[element]) * model.preference[element], 0);
   const tension = hits.reduce((sum, hit) => sum + (pressure[hit.kind] || 0), 0);
   const base = 62 + fit * 2.7 - tension * .85;
   const scores = domains.map(([label, targets, houses, action]) => {
@@ -288,7 +347,7 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
     ['人際衝突警示', roundScore(80 - find('人際與合作').score + stars.傷官 * 4 + find('人際與合作').friction)],
     ['感情摩擦警示', roundScore(85 - find('感情').score + find('感情').friction * 2)]
   ];
-  return {luck, year, month, hits, fit, movement, overall: roundScore(base), scores, risks};
+  return {luck, year, month, hits, fit, movement, natalShift, overall: roundScore(base), scores, risks};
 }
 // 八字核心結束
 
@@ -368,6 +427,15 @@ function renderNatal(out, model) {
     (model.special ? model.special + '候選（根氣、透干及集中度門檻）' : model.ordinary + '（月令透干優先）') +
     '，寒熱值 ' + model.heat.toFixed(2) + '，燥濕值 ' + model.dryness.toFixed(2) +
     '。調候採月令與原局火水、燥濕土加權。');
+  if (model.seasonalCandidates.length) {
+    const description = model.seasonalCandidates.map(({stem, exposed, rooted, excess}) =>
+      stem + '（' + (exposed ? '透干' : '未透干') + '、' + (rooted ? '藏支有根' : '藏支無根') +
+      (excess ? '，同類已集中' : '') + '）').join('、');
+    article(out, '春月調候 · ' + model.day + '日' + model.pillars[1][1] + '月',
+      '依序核對' + description + '。' +
+      (model.special ? '原局有特殊格候選，合併用神時以格局為先。' : '同類已集中時，該候選不額外加分。'),
+      '參考《窮通寶鑑》春月日干條目，癸日辰月另以穀雨時間分段。');
+  }
   heading(out, '原局刑沖合化');
   const list = node('ul', '');
   for (const hit of model.hits) list.append(node('li', describe(hit)));
@@ -415,6 +483,11 @@ function renderAnnual(out, model, year, isCurrent) {
     }
     for (const [label, score] of result.risks) metrics.append(node('dt', label), node('dd', score + '%'));
     box.append(metrics);
+    const changed = result.natalShift.reduce((items, shift, element) => {
+      if (Math.abs(shift) > .001) items.push(names[element] + ' ' + (shift > 0 ? '+' : '') + shift.toFixed(2));
+      return items;
+    }, []);
+    if (changed.length) note(box, '運歲加入後，原局合化權重變動｜' + changed.join('、'));
     const tracked = result.scores.slice(0, 9);
     const ranked = [...tracked].sort((a,b) => b.score - a.score);
     const best = ranked[0];
