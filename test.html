@@ -16,11 +16,11 @@ summary{cursor:pointer;font-weight:650}
   body[data-print-report="chart"] #pair,body[data-print-report="pair-chart"] #entry,
   main>section .birth-coords, #entry>h2,#entry>p,#pair>h2,#pair>p,#pair-chart button{display:none}
 }
-</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>八字、紫微斗數、西洋占星與雙人合盤</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第十版命理測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・大限與流年</small></div><div class="feature"><b>西洋占星</b><small>本命星盤・上升與相位</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算三大命理（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><details class="birth-coords"><summary>西洋占星出生地座標</summary><p>預填台北市座標。若出生地不同，請輸入出生地座標。兩人出生時間均以 UTC+8 填寫。</p><div class="coord"><label>出生地緯度<input id="person-a-latitude" type="number" step="any" min="-65.99" max="65.99" value="25.033" required></label><label>出生地經度<input id="person-a-longitude" type="number" step="any" min="-180" max="180" value="121.5654" required></label></div></details><div id="chart" role="status"></div></section><section id="pair"><h2>雙人合盤</h2><p>甲方沿用上方資料。乙方資料僅用於這次試算。</p>
+</style></head><body><main><header><small class="hero">✦ DESTINY & ASTROLOGY ✦</small><h1>神機妙算安安貝比</h1><p>西洋占星 · 八字 · 紫微斗數</p><div class="wheel" aria-hidden="true">☾</div><p>八字、紫微斗數、西洋占星與雙人合盤</p><a class="cta" href="#entry">開啟我的專屬命盤</a><small>第十版命理測試｜傳統文化參考</small></header><div class="features"><div class="feature"><b>八字命理</b><small>完整四柱・大運流年</small><a href="#entry">開始試算</a></div><div class="feature"><b>紫微斗數</b><small>十二宮・大限與流年</small></div><div class="feature"><b>西洋占星</b><small>本命星盤・上升與相位</small></div></div><section id="entry"><h2>建立命盤資料</h2><p>請使用虛構測試資料。八字試算在瀏覽器內進行，不需上傳；雲端提交須另行同意。</p><form id="profile"><label>暱稱<input name="nickname" required maxlength="80"></label><label>出生日期<input name="birth_date" type="date" required></label><label>出生時間<input name="birth_time" type="time" step="1" required></label><label>排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label><label>出生地<input name="birth_place" required maxlength="200"></label><label>時區<input name="timezone" value="Asia/Taipei" required></label><label><input id="consent" type="checkbox"> 我同意將測試資料儲存於雲端，供網站管理員查看及測試。</label><button type="button" id="calculate">試算三大命理（不儲存）</button><button type="submit">提交測試資料</button></form><p id="status" role="status"></p><details class="birth-coords"><summary>西洋占星出生地座標</summary><p>請填出生地座標，或點選台北市。兩人出生時間均以 UTC+8 填寫。</p><div class="coord"><label>出生地緯度<input id="person-a-latitude" type="number" step="any" min="-65.99" max="65.99"></label><label>出生地經度<input id="person-a-longitude" type="number" step="any" min="-180" max="180"></label></div><button type="button" data-taipei="person-a">使用台北市座標</button></details><div id="chart" role="status"></div></section><section id="pair"><h2>雙人合盤</h2><p>甲方沿用上方資料。乙方資料僅用於這次試算。</p>
 <form id="pair-form"><label>乙方出生日期<input name="birth_date" type="date" required></label>
 <label>乙方出生時間<input name="birth_time" type="time" step="1" required></label>
 <label>乙方排盤性別<select name="gender"><option value="female">女</option><option value="male">男</option></select></label>
-<div class="coord"><label>出生地緯度<input id="person-b-latitude" type="number" step="any" min="-65.99" max="65.99" value="25.033" required></label><label>出生地經度<input id="person-b-longitude" type="number" step="any" min="-180" max="180" value="121.5654" required></label></div><button type="submit">計算雙人合盤</button></form><div id="pair-chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script src="https://cdn.jsdelivr.net/npm/iztro@2.6.5/dist/iztro.min.js"></script><script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script><script>
+<div class="coord"><label>出生地緯度<input id="person-b-latitude" type="number" step="any" min="-65.99" max="65.99"></label><label>出生地經度<input id="person-b-longitude" type="number" step="any" min="-180" max="180"></label></div><button type="button" data-taipei="person-b">使用台北市座標</button><button type="submit">計算雙人合盤</button></form><div id="pair-chart" role="status"></div></section><section><details><summary>管理員登入</summary><form id="login"><label>Email<input name="email" type="email" required></label><label>密碼<input name="password" type="password" required></label><button>登入</button></form><p id="adminStatus" role="status"></p><div id="panel" hidden><button id="refresh">重新整理資料</button><button id="logout">登出</button><div id="records"></div></div></details></section><footer>隱私說明：僅在勾選同意並提交後將表單資料傳送至 Supabase，供管理員測試查看。請勿輸入真實個資。命理不具科學預測效力。</footer></main><script src="https://cdn.jsdelivr.net/npm/lunar-javascript@1.6.12/lunar.js"></script><script src="https://cdn.jsdelivr.net/npm/iztro@2.6.5/dist/iztro.min.js"></script><script src="https://cdn.jsdelivr.net/npm/astronomy-engine@2.1.19/astronomy.browser.min.js"></script><script>
 const stems='甲乙丙丁戊己庚辛壬癸', branches='子丑寅卯辰巳午未申酉戌亥';
 const groups=['甲乙寅卯','丙丁巳午','戊己辰戌丑未','庚辛申酉','壬癸亥子'], classes=['wood','fire','earth','metal','water'], names=['木','火','土','金','水'], colors=['#43865B','#CF4545','#795039','#C2A56D','#3265B5'];
 const hidden=['癸','己癸辛','甲丙戊','乙','戊乙癸','丙戊庚','丁己','己丁乙','庚壬戊','辛','戊辛丁','壬甲'];
@@ -686,12 +686,15 @@ document.getElementById('calculate').onclick = () => {
     const natal = chartModel(birth, data.gender);
     renderReport(out, natal, now);
     try {
-      const profile = completeProfile(data, locationFields('person-a'), now, natal);
-      renderZiwei(out, profile.ziwei);
+      const at = keyOf(now) < keyOf(birth) ? birth : now;
+      const ziwei = ziweiChart(birth, data.gender, at);
+      renderZiwei(out, ziwei);
+      const coords = locationFields('person-a');
+      const profile = {reading:reading(natal, at), ziwei, western:westernChart(birth, ...coords)};
       renderWestern(out, profile.western);
       renderCombined(out, profile);
     } catch (error) {
-      note(out, '紫微、西洋或綜合報告未產生：' + error.message);
+      note(out, '部分報告未產生：' + error.message);
     }
   } catch (error) {
     out.replaceChildren(node('p', '排盤失敗：' + error.message));
@@ -845,7 +848,11 @@ function comparePeople(first, second) {
 function locationFields(prefix) {
   const latitude = document.getElementById(prefix + '-latitude');
   const longitude = document.getElementById(prefix + '-longitude');
-  if (!latitude.reportValidity() || !longitude.reportValidity()) throw Error('請確認出生地經緯度');
+  if (!latitude.value || !longitude.value || !latitude.validity.valid || !longitude.validity.valid) {
+    const details = latitude.closest('details');
+    if (details) details.open = true;
+    throw Error('請填寫' + (prefix === 'person-a' ? '甲方' : '乙方') + '出生地經緯度');
+  }
   return [Number(latitude.value), Number(longitude.value)];
 }
 
@@ -946,6 +953,15 @@ function printReport(out) {
     delete document.body.dataset.printReport;
     for (const section of collapsed) section.open = false;
   }
+}
+
+for (const button of document.querySelectorAll('[data-taipei]')) {
+  button.addEventListener('click', () => {
+    const latitude = document.getElementById(button.dataset.taipei + '-latitude');
+    latitude.value = '25.033';
+    document.getElementById(button.dataset.taipei + '-longitude').value = '121.5654';
+    latitude.dispatchEvent(new Event('input', {bubbles:true}));
+  });
 }
 
 // 任一方修改出生資料後，清除需要重新計算的畫面。
