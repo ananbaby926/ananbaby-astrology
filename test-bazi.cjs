@@ -125,6 +125,34 @@ test('同流年不同盤、同一盤同流年跨大運，分數與實際行動�
   assert.ok(before.scores.some((item,index) => item.advice !== after.scores[index].advice));
 });
 
+test('同一命盤交運前後逐項驗證事業、財富和感情', () => {
+  const person = model([2000,1,1,12], 'male');
+  const before = api.reading(person, date(2018,3,12,13,59,59));
+  const after = api.reading(person, date(2018,3,12,14));
+  assert.equal(before.year, '戊戌');
+  assert.equal(after.year, before.year);
+  assert.equal(before.luck, '乙亥');
+  assert.equal(after.luck, '甲戌');
+  const topic = (period, label) => period.scores.find(item => item.label === label);
+  const changes = [
+    ['事業', 66, 66, /考核/, /難案/],
+    ['財富', 65, 67, /續約/, /續約/],
+    ['感情', 66, 67, /承諾與相處時間/, /共同支出與平日分工/]
+  ];
+  for (const [label, oldScore, newScore, oldAdvice, newAdvice] of changes) {
+    const old = topic(before,label);
+    const next = topic(after,label);
+    assert.equal(old.score, oldScore);
+    assert.equal(next.score, newScore);
+    assert.match(old.advice, oldAdvice);
+    assert.match(next.advice, newAdvice);
+    assert.match(old.basis, /乙亥大運、戊戌流年.*原局.*正官／偏財.*原局喜用合計/);
+    assert.match(next.basis, /甲戌大運、戊戌流年.*原局.*七殺／比肩.*原局喜用合計/);
+  }
+  assert.equal(topic(before,'財富').advice, topic(after,'財富').advice);
+  assert.notEqual(before.fit, after.fit);
+});
+
 test('十二節月與十日干共 120 組可排盤，每組都有分月調候候選', () => {
   const covered = new Set();
   for (let month = 1; month <= 12; month++) {
