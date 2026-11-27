@@ -322,11 +322,18 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     await page.locator('#calculate').click();
     await page.getByText('八字本命盤').waitFor();
     await page.getByRole('heading', {name:'紫微斗數 · 十二宮'}).waitFor();
+    await page.locator('#chart').getByText(/請填寫甲方出生地經緯度/).waitFor();
+    assert.equal(await page.getByRole('heading', {name:'西洋占星 · 本命盤'}).count(), 0);
+    await page.locator('#entry [data-taipei]').click();
+    await page.locator('#calculate').click();
     await page.getByRole('heading', {name:'西洋占星 · 本命盤'}).waitFor();
     await page.getByRole('heading', {name:'三大命理綜合報告'}).waitFor();
     const second = page.locator('#pair-form');
     await second.locator('[name=birth_date]').fill('2000-01-01');
     await second.locator('[name=birth_time]').fill('20:00:00');
+    await second.getByRole('button', {name:'計算雙人合盤'}).click();
+    await page.locator('#pair-chart').getByText(/請填寫乙方出生地經緯度/).waitFor();
+    await second.locator('[data-taipei]').click();
     await second.getByRole('button', {name:'計算雙人合盤'}).click();
     await page.locator('#pair-chart').getByRole('heading', {name:'西洋 · 雙盤行星相位'}).waitFor();
     await page.getByRole('heading', {name:'節月調候 · 乙日申月'}).waitFor();
