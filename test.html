@@ -5,8 +5,9 @@
 .current-year{border:2px solid #C2A56D;background:#fcf4e5}
 .annual-card{padding:14px;margin:10px 0}
 summary{cursor:pointer;font-weight:650}
-.metrics{display:grid;grid-template-columns:1fr auto;gap:3px 16px;max-width:430px}
-.metrics dd{margin:0;font-variant-numeric:tabular-nums}
+.annual-metric{margin:7px 0;padding:6px 10px;border-bottom:1px solid #e7dacb}
+.annual-metric p{margin:.35em 0}
+@media print{.annual-metric{break-inside:avoid}}
 .trend{overflow:auto}
 .trend svg{width:100%;min-width:450px}
 @media(max-width:480px){main{padding:12px}section{padding:14px}.pillar small{font-size:.67em}}
@@ -440,10 +441,20 @@ function reading(model, solar, {monthly = false, yearAnchor = solar} = {}) {
     return {label, star, score, advice, basis, opportunity, mistake, correction, friction};
   });
   const find = label => scores.find(score => score.label === label);
+  const wealth = find('財富');
+  const debt = find('負債');
+  const social = find('人際與合作');
+  const couple = find('感情');
   const risks = [
-    ['破財警示', roundScore(85 - find('財富').score + stars.劫財 * 4 + find('負債').friction)],
-    ['人際衝突警示', roundScore(80 - find('人際與合作').score + stars.傷官 * 4 + find('人際與合作').friction)],
-    ['感情摩擦警示', roundScore(85 - find('感情').score + find('感情').friction * 2)]
+    {label:'破財警示', score:roundScore(85 - wealth.score + stars.劫財 * 4 + debt.friction),
+      basis:debt.basis + '。財富傾向 ' + wealth.score + '%，另計劫財權重 ' + stars.劫財.toFixed(2) + ' 與負債相關刑沖壓力。',
+      advice:debt.advice},
+    {label:'人際衝突警示', score:roundScore(80 - social.score + stars.傷官 * 4 + social.friction),
+      basis:social.basis + '。另計傷官權重 ' + stars.傷官.toFixed(2) + ' 與合作相關刑沖壓力。',
+      advice:social.advice},
+    {label:'感情摩擦警示', score:roundScore(85 - couple.score + couple.friction * 2),
+      basis:couple.basis + '。夫妻宮相關刑沖壓力 ' + couple.friction.toFixed(1) + '。',
+      advice:couple.advice}
   ];
   return {luck, year, month, hits, fit, movement, natalShift, patternStress, overall: roundScore(base), scores, risks};
 }
@@ -576,11 +587,14 @@ function renderAnnual(out, model, year, isCurrent) {
   for (const phase of phases) {
     const result = phase.result;
     heading(box, keyOf(phase.start) + ' 起 · ' + (result.luck ? result.luck + '大運' : '未起運'));
-    const metrics = node('dl', '', 'metrics');
-    for (const score of result.scores.slice(0, 9)) {
-      metrics.append(node('dt', score.label), node('dd', score.score + '%'));
+    const tracked = result.scores.slice(0, 9);
+    const metrics = node('div', '', 'annual-metrics');
+    for (const item of [...tracked, ...result.risks]) {
+      const detail = node('details', '', 'annual-metric');
+      detail.append(node('summary', item.label + ' ' + item.score + '%'),
+        node('p', item.advice), node('small', '命理依據｜' + item.basis));
+      metrics.append(detail);
     }
-    for (const [label, score] of result.risks) metrics.append(node('dt', label), node('dd', score + '%'));
     box.append(metrics);
     const changed = result.natalShift.reduce((items, shift, element) => {
       if (Math.abs(shift) > .001) items.push(names[element] + ' ' + (shift > 0 ? '+' : '') + shift.toFixed(2));
@@ -588,7 +602,6 @@ function renderAnnual(out, model, year, isCurrent) {
     }, []);
     if (result.patternStress.text) note(box, result.patternStress.text);
     if (changed.length) note(box, '運歲加入後，原局合化權重變動｜' + changed.join('、'));
-    const tracked = result.scores.slice(0, 9);
     const ranked = [...tracked].sort((a,b) => b.score - a.score);
     const best = ranked[0];
     const worst = ranked.at(-1);
