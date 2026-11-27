@@ -2,9 +2,11 @@
  * Run: node --test test-bazi.cjs
  * Offline inputs: LUNAR_JS (1.6.12), IZTRO_JS (2.6.5), ASTRONOMY_JS (2.1.19).
  * Optional browser checks: set BAZI_BROWSER to a Chromium executable and install playwright.
+ * Browser PDF text verification requires Poppler pdftotext on PATH.
  * No request is sent to Supabase.
  */
 const fs = require('node:fs');
+const {execFileSync} = require('node:child_process');
 const path = require('node:path');
 const vm = require('node:vm');
 const {test, before} = require('node:test');
@@ -347,10 +349,25 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     assert.equal(await page.locator('.annual-card[open]').count(),1);
     await page.getByRole('button', {name:'列印／儲存雙人 PDF'}).click();
     assert.equal(await page.locator('body').getAttribute('data-print-target'), 'pair-chart');
-    await page.evaluate(() => { document.body.dataset.printReport = 'pair-chart'; });
-    const pdf = await page.pdf({format:'A4'});
-    assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
-    assert.ok(pdf.length > 1000);
+    async function reportPdfText(target) {
+      await page.evaluate(id => {
+        document.body.dataset.printReport = id;
+        for (const section of document.getElementById(id).querySelectorAll('details')) section.open = true;
+      }, target);
+      const pdf = await page.pdf({format:'A4'});
+      assert.equal(pdf.subarray(0, 5).toString(), '%PDF-');
+      return execFileSync('pdftotext', ['-', '-'], {input:pdf, encoding:'utf8'}).replace(/\s+/g, '');
+    }
+    const personalPdf = await reportPdfText('chart');
+    assert.match(personalPdf, /八字本命盤/);
+    assert.match(personalPdf, /三大命理綜合報告/);
+    assert.match(personalPdf, /十二節氣月/);
+    assert.doesNotMatch(personalPdf, /雙盤行星相位|管理員登入|虛構命盤甲/);
+    const pairPdf = await reportPdfText('pair-chart');
+    assert.match(pairPdf, /雙盤行星相位/);
+    assert.match(pairPdf, /相處建議/);
+    assert.doesNotMatch(pairPdf, /八字本命盤|三大命理綜合報告|管理員登入|虛構命盤甲/);
+    await page.evaluate(() => { delete document.body.dataset.printReport; });
     await second.locator('[name=birth_date]').fill('1992-12-13');
     assert.equal(await page.locator('#pair-chart article').count(), 0);
     assert.equal(await page.locator('#chart .annual-card').count(), 10);
