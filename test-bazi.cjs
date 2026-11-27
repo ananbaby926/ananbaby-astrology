@@ -304,7 +304,12 @@ test('更換乙方會改變合盤相位和三系統綜合報告內容', () => {
   assert.notDeepEqual(api.comparePeople(a,b).aspects, api.comparePeople(a,c).aspects);
   const aThemes = api.combinedTopics(a.reading, a.ziwei, a.western);
   const cThemes = api.combinedTopics(c.reading, c.ziwei, c.western);
-  assert.equal(aThemes.length, 3);
+  assert.equal(aThemes.length, 14);
+  assert.ok(aThemes.some(theme => theme.label === '置產' && theme.purple.natal.name === '田宅'));
+  assert.ok(aThemes.every(theme => theme.purple.interpretation && theme.westernReading));
+  const pair = api.comparePeople(a,b);
+  assert.equal(pair.stories.length, 4);
+  assert.ok(pair.stories.some(story => /甲方.*乙方/.test(story.evidence) && /實際可以/.test(story.advice)));
   assert.ok(aThemes.every((theme,index) => theme.conclusion !== cThemes[index].conclusion));
 });
 
@@ -407,6 +412,8 @@ test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !proces
     const pairPdf = await reportPdfText('pair-chart');
     assert.match(pairPdf, /雙盤行星相位/);
     assert.match(pairPdf, /相處建議/);
+    assert.match(pairPdf, /金錢觀與親密感/);
+    assert.match(personalPdf, /三大命理綜合報告.*子女與教養/s);
     assert.doesNotMatch(pairPdf, /八字本命盤|三大命理綜合報告|管理員登入|虛構命盤甲/);
     await page.evaluate(() => { delete document.body.dataset.printReport; });
     await second.locator('[name=birth_date]').fill('1992-12-13');
