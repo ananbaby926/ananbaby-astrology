@@ -182,6 +182,45 @@ test('流年透干引動原局與大運六合，火土氣量同步轉移', () =>
   assert.ok(current.hits.some(hit => hit.symbols === '午未' && hit.transforms));
 });
 
+test('建祿與陽刃由日干和節月定位，從財、從殺、從兒各有實際日期案例', () => {
+  const lu = model([1990,3,11,0]);
+  const blade = model([1990,12,13,0]);
+  assert.equal(lu.day + lu.pillars[1][1], '乙卯');
+  assert.equal(lu.ordinary, '建祿候選');
+  assert.equal(blade.day + blade.pillars[1][1], '壬子');
+  assert.equal(blade.ordinary, '陽刃候選');
+  assert.equal(model([1992,9,17,6]).special, '從財');
+  assert.equal(model([1992,12,17,0]).special, '從殺');
+  assert.equal(model([1993,1,15,0]).special, '從兒');
+});
+
+test('從格與專旺的接近案例保留普通格扶抑並列出阻礙', () => {
+  const rooted = model([1990,1,7,0]);
+  const mixed = model([1990,8,13,18]);
+  assert.equal(rooted.special, '');
+  assert.equal(rooted.pattern.borderline, '從殺');
+  assert.match(rooted.pattern.evidence, /同類根氣.*印比透干/);
+  assert.equal(mixed.special, '');
+  assert.equal(mixed.pattern.borderline, '從革專旺');
+  assert.match(mixed.pattern.evidence, /未達門檻/);
+  assert.ok(mixed.balanceScore[3] < 0);
+});
+
+test('從格遇印比、專旺遇月令沖時，警示與分數隨運歲觸發', () => {
+  const follow = model([1992,11,16,0]);
+  const strong = model([1992,12,13,0]);
+  const before = api.reading(follow, date(2025,7,1,12));
+  const after = api.reading(follow, date(2026,7,1,12));
+  assert.equal(before.patternStress.penalty, 0);
+  assert.ok(after.patternStress.penalty > 0);
+  assert.match(after.patternStress.text, /印比/);
+  assert.notEqual(before.overall, after.overall);
+  const clashed = api.reading(strong, date(2026,7,1,12));
+  assert.match(clashed.patternStress.text, /官殺.*沖月令/);
+  assert.ok(clashed.patternStress.penalty > 0);
+  assert.equal(strong.special, '潤下專旺');
+});
+
 test('Chromium 走試算、流月與列印入口，網路隔離', {skip: !process.env.BAZI_BROWSER}, async () => {
   const {chromium} = require('playwright');
   const browser = await chromium.launch({executablePath:process.env.BAZI_BROWSER, args:['--no-sandbox']});
